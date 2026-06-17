@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Changes — Web Portal</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c10;
+      --bg-elevated: #18181f;
+      --bg-card: rgba(255,255,255,0.04);
+      --fg: #f4f4f5;
+      --fg-muted: #a1a1aa;
+      --fg-subtle: #71717a;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.14);
+      --accent: #3b82f6;
+      --accent-bg: rgba(59,130,246,0.10);
+      --green: #22c55e;
+      --green-bg: rgba(34,197,94,0.08);
+      --red: #f87171;
+      --red-bg: rgba(239,68,68,0.08);
+      --amber: #fbbf24;
+      --amber-bg: rgba(245,158,11,0.08);
+      --purple: #a78bfa;
+      --purple-bg: rgba(167,139,250,0.08);
+      --code-bg: #131318;
+      --sidebar-width: 260px;
+      --radius: 8px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar nav ── */
+    nav.sidenav {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      overflow-y: auto;
+      background: #0e0e15;
+      border-right: 1px solid var(--border);
+      padding: 24px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    nav.sidenav .nav-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-subtle);
+      padding: 6px 10px;
+      margin-bottom: 4px;
+    }
+
+    nav.sidenav a {
+      display: block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: var(--fg-muted);
+      text-decoration: none;
+      font-size: 12px;
+      transition: background 120ms, color 120ms;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    nav.sidenav a:hover { background: var(--bg-card); color: var(--fg); }
+    nav.sidenav a.active { background: var(--accent-bg); color: var(--accent); font-weight: 600; }
+
+    /* ── Main content ── */
+    main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      max-width: 900px;
+      padding: 48px 48px 120px;
+    }
+
+    /* ── Header ── */
+    header {
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--fg);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--fg-muted);
+      font-size: 13px;
+    }
+
+    .commit-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--fg-subtle);
+      margin-top: 10px;
+    }
+
+    .commit-badge span { color: var(--accent); font-weight: 600; }
+
+    /* ── Section ── */
+    section.change-section {
+      margin-bottom: 64px;
+    }
+
+    section.change-section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 4px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    section.change-section h2 .file-pill {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--fg-muted);
+    }
+
+    section.change-section > .section-why {
+      font-size: 13px;
+      color: var(--fg-subtle);
+      margin: 8px 0 20px;
+      padding-left: 12px;
+      border-left: 2px solid var(--border-strong);
+    }
+
+    /* ── Change block ── */
+    .change-block {
+      margin-bottom: 32px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .change-block-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .change-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .label-new   { background: var(--green-bg);  color: var(--green);  }
+    .label-mod   { background: var(--accent-bg); color: var(--accent); }
+    .label-rm    { background: var(--red-bg);    color: var(--red);    }
+    .label-feat  { background: var(--purple-bg); color: var(--purple); }
+
+    .change-block-header h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--fg);
+    }
+
+    .change-block-body {
+      padding: 16px;
+    }
+
+    .change-block-body p {
+      color: var(--fg-muted);
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* ── Code blocks ── */
+    .code-diff {
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 12px 0;
+      font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .code-diff-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+    .diff-before .code-diff-label { background: rgba(239,68,68,0.08);  color: var(--red);    }
+    .diff-after  .code-diff-label { background: rgba(34,197,94,0.08);  color: var(--green);  }
+    .diff-new    .code-diff-label { background: rgba(59,130,246,0.08); color: var(--accent); }
+
+    pre {
+      background: var(--code-bg);
+      padding: 14px 16px;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    code {
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 12px;
+    }
+
+    /* inline code */
+    p code, li code {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 11.5px;
+      color: var(--fg-muted);
+    }
+
+    .diff-line-rm  { background: rgba(239,68,68,0.08);  color: #fca5a5; display: block; }
+    .diff-line-add { background: rgba(34,197,94,0.08);  color: #86efac; display: block; }
+    .diff-line-ctx { color: var(--fg-subtle); display: block; }
+
+    /* ── Explanation box ── */
+    .explanation {
+      background: rgba(59,130,246,0.05);
+      border: 1px solid rgba(59,130,246,0.15);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-top: 12px;
+    }
+    .explanation strong { color: var(--accent); }
+    .explanation p { margin: 0; color: var(--fg-muted); font-size: 13px; }
+
+    /* ── Table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 12px;
+    }
+    th {
+      text-align: left;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.04);
+      color: var(--fg-subtle);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-strong);
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--fg-muted);
+      vertical-align: top;
+    }
+    td:first-child { font-family: ui-monospace, monospace; color: var(--accent); font-size: 11px; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Summary table (last section) ── */
+    .summary-table td:nth-child(2) { color: var(--amber); }
+    .summary-table td:nth-child(3) { color: var(--fg-subtle); }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      nav.sidenav { display: none; }
+      main { margin-left: 0; padding: 24px 20px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Sidebar navigation ── -->
+<nav class="sidenav">
+  <div class="nav-title">Code Changes</div>
+  <a href="#types">1. types.ts</a>
+  <a href="#schema">2. db/schema.ts</a>
+  <a href="#dbindex">3. db/index.ts</a>
+  <a href="#store">4. store.ts</a>
+  <a href="#seeddata">5. seed-data.ts</a>
+  <a href="#login">6. login/page.tsx</a>
+  <a href="#portalapp">7. portal-app.tsx</a>
+  <a href="#sidebar">8. sidebar.tsx</a>
+  <a href="#appearance">9. appearance-panel.tsx</a>
+  <a href="#profile">10. profile-panel.tsx</a>
+  <a href="#deploy">11. DEPLOY.md</a>
+  <a href="#summary">12. Summary Table</a>
+</nav>
+
+<!-- ── Main content ── -->
+<main>
+
+  <header>
+    <h1>Code Changes — Web Portal</h1>
+    <p>Detailed explanation of every file changed in the feature commit.</p>
+    <div class="commit-badge">
+      commit <span>a5ac337</span> · master · 2026-06-17
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 1. types.ts -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="types">
+    <h2><span class="file-pill">src/lib/types.ts</span></h2>
+    <p class="section-why">Central type definitions — all other files derive their types from here. Three changes were made.</p>
+
+    <!-- A: Theme union -->
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>A — <code>Theme</code> union type extended to include "system"</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>export type Theme = "dark" | "light";</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>export type Theme = "dark" | "light" | "system";</code></pre>
+        </div>
+        <div class="explanation">
+          <p>Adding <strong>"system"</strong> as a third option allows the app to follow the OS dark/light preference via <code>window.matchMedia("(prefers-color-scheme: dark)")</code>. Every component that references <code>Theme</code> now needs to handle three states instead of two.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: avatarIcon field -->
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New Field</span>
+        <h3>B — <code>UserProfile.avatarIcon</code> optional emoji field</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>export interface UserProfile {
+  name: string;
+  initial: string;
+  avatarColor: string;
+  role: string;
+}</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>export interface UserProfile {
+  name: string;
+  initial: string;      // auto-derived from name
+  avatarColor: string;
+  role: string;
+  avatarIcon?: string;  // NEW — emoji override e.g. "🚀"
+}</code></pre>
+        </div>
+        <div class="explanation">
+          <p>The <strong>?</strong> makes it optional so existing data (without the field) is valid. When <code>avatarIcon</code> is a non-empty string, components show the emoji; when empty/undefined they show the letter monogram. Stored as a separate DB column.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: DEFAULT_SETTINGS -->
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>C — <code>DEFAULT_SETTINGS</code> uses real user identity</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>profile: {
+  name: "My Portal",
+  initial: "M",
+  avatarColor: "#3b82f6",
+  role: "Developer",
+}</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>profile: {
+  name: "Quoc Thien",
+  initial: "Q",
+  avatarColor: "#3b82f6",
+  role: "Software Developer",
+  avatarIcon: "",
+}</code></pre>
+        </div>
+        <div class="explanation">
+          <p>The generic placeholder values caused the sidebar to show <strong>"My Portal / Developer"</strong> for every new deploy. Replacing them with the real user's name and title means a fresh Vercel deploy looks correct immediately — before the user visits Settings → Profile to customize.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 2. db/schema.ts -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="schema">
+    <h2><span class="file-pill">src/lib/db/schema.ts</span></h2>
+    <p class="section-why">Drizzle ORM schema — defines the PostgreSQL table structure. Adding <code>avatarIcon</code> to the profile requires a new column definition.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New Column</span>
+        <h3><code>profileAvatarIcon</code> added to <code>portalSettings</code> table</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>  profileRole: text("profile_role").notNull().default("Developer"),
+  version: integer("version").notNull().default(2),</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>  profileRole: text("profile_role").notNull().default("Software Developer"),
+  profileAvatarIcon: text("profile_avatar_icon").default(""),  // NEW
+  version: integer("version").notNull().default(2),</code></pre>
+        </div>
+        <div class="explanation">
+          <p>The column is declared without <code>.notNull()</code> so existing rows (that predate this column) remain valid. Drizzle ORM uses this schema to generate type-safe SQL queries — the column name in Postgres is <code>profile_avatar_icon</code> (snake_case) and the TypeScript property is <code>profileAvatarIcon</code> (camelCase).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 3. db/index.ts -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="dbindex">
+    <h2><span class="file-pill">src/lib/db/index.ts</span></h2>
+    <p class="section-why">Contains <code>ensureTables()</code> — the DDL runner that creates tables on first request. Existing tables need an <code>ALTER TABLE</code> to gain the new column.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New</span>
+        <h3><code>ALTER TABLE ... ADD COLUMN IF NOT EXISTS</code> migration</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-new">
+          <div class="code-diff-label">Added after the CREATE TABLE for portal_settings</div>
+          <pre><code>await sqlHttp`
+  ALTER TABLE portal_settings
+  ADD COLUMN IF NOT EXISTS profile_avatar_icon TEXT DEFAULT ''
+`;</code></pre>
+        </div>
+        <div class="explanation">
+          <p><strong>Why ALTER TABLE?</strong> <code>CREATE TABLE IF NOT EXISTS</code> only runs once — if the table already exists, no new columns are added. For a production database that already has the <code>portal_settings</code> table, this <code>ALTER TABLE</code> adds the missing column. The <strong>IF NOT EXISTS</strong> clause makes it idempotent (safe to call multiple times). This pattern is used instead of a separate migration runner.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 4. store.ts -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="store">
+    <h2><span class="file-pill">src/lib/store.ts</span></h2>
+    <p class="section-why">The dual-storage facade — all reads and writes to Neon pass through here. New fields must be mapped in both directions.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>A — Read mapping: Neon row → TypeScript object</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>theme: settingsRow.theme as "dark" | "light",
+profile: {
+  name: settingsRow.profileName,
+  initial: settingsRow.profileInitial,
+  avatarColor: settingsRow.profileAvatarColor,
+  role: settingsRow.profileRole,
+},</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>theme: settingsRow.theme as "dark" | "light" | "system",
+profile: {
+  name: settingsRow.profileName,
+  initial: settingsRow.profileInitial,
+  avatarColor: settingsRow.profileAvatarColor,
+  role: settingsRow.profileRole,
+  avatarIcon: settingsRow.profileAvatarIcon ?? "",  // NEW
+},</code></pre>
+        </div>
+        <div class="explanation">
+          <p>The <strong>??</strong> (nullish coalescing) handles rows created before the column existed — they return <code>null</code> from Postgres, which becomes an empty string here. The theme cast now includes <code>"system"</code> so "system" stored in the DB is returned correctly instead of being widened to an incorrect type.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>B — Write mapping: upsert includes <code>profileAvatarIcon</code></h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">Added to both INSERT values and ON CONFLICT DO UPDATE set</div>
+          <pre><code>// In .values({...})
+profileAvatarIcon: s.profile.avatarIcon ?? "",
+
+// In .onConflictDoUpdate({ set: {...} })
+profileAvatarIcon: drizzleSql`excluded.profile_avatar_icon`,</code></pre>
+        </div>
+        <div class="explanation">
+          <p><strong>Why two places?</strong> The INSERT handles new rows; the <code>ON CONFLICT DO UPDATE</code> handles existing rows (upsert pattern). <code>drizzleSql\`excluded.profile_avatar_icon\`</code> is Drizzle ORM syntax that references the proposed INSERT value — meaning "use the value we just tried to insert". Without this, saving the profile would leave the column unchanged on update.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 5. seed-data.ts -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="seeddata">
+    <h2><span class="file-pill">src/lib/seed-data.ts</span></h2>
+    <p class="section-why">The seed data is bulk-loaded into Neon when <code>/api/setup</code> is visited on a fresh deploy. Its profile values should match the real user.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>Profile in seed settings — real name + emoji icon</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>settings: DEFAULT_SETTINGS,</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>settings: {
+  ...DEFAULT_SETTINGS,
+  profile: {
+    name: "Quoc Thien",
+    initial: "Q",
+    avatarColor: "#3b82f6",
+    role: "Software Developer",
+    avatarIcon: "💻",
+  },
+},</code></pre>
+        </div>
+        <div class="explanation">
+          <p>Using <code>...DEFAULT_SETTINGS</code> (spread) keeps theme and defaultView from the default, but overrides only the profile. The <strong>💻</strong> emoji is set as the default avatar icon so the sidebar looks personal from the very first deploy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 6. login/page.tsx -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="login">
+    <h2><span class="file-pill">src/app/login/page.tsx</span></h2>
+    <p class="section-why">Completely redesigned from a centered card to a split-screen SaaS layout. Three new components replace the old single component.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New</span>
+        <h3>A — <code>BrandingPanel</code> component — left dark panel</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-new">
+          <div class="code-diff-label">New component (hidden on mobile, visible on lg+)</div>
+          <pre><code>function BrandingPanel() {
+  return (
+    &lt;div style={{
+      background: "linear-gradient(135deg, #0c0c10, #0f172a, #0c1a2e)",
+      flex: "0 0 52%"
+    }}&gt;
+      {/* SVG grid pattern at 6% opacity */}
+      {/* Two radial glow orbs (blue + violet) */}
+      {/* Logo + hero headline */}
+      {/* 4 feature highlight rows */}
+    &lt;/div&gt;
+  );
+}</code></pre>
+        </div>
+        <div class="explanation">
+          <p>
+            <strong>linear-gradient</strong>: creates a deep dark background transitioning from near-black → dark navy — matching the app's dark theme.<br><br>
+            <strong>SVG grid</strong>: an <code>&lt;svg&gt;</code> with a <code>&lt;pattern&gt;</code> element draws a subtle blue grid at 6% opacity — visible but not distracting.<br><br>
+            <strong>Glow orbs</strong>: two <code>&lt;div&gt;</code>s with <code>radial-gradient</code> backgrounds simulate ambient light sources (blue top-right, violet bottom-left).<br><br>
+            <strong>flex: "0 0 52%"</strong>: gives the panel a fixed 52% width that does not grow or shrink.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Restructured</span>
+        <h3>B — <code>LoginForm</code> — full-height right panel</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before — centered card</div>
+          <pre><code>&lt;div className="min-h-dvh flex items-center justify-center p-4"&gt;
+  &lt;div style={{ maxWidth: 384, borderRadius: 16, padding: 32 }}&gt;
+    ...
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After — right panel filling remaining width</div>
+          <pre><code>&lt;div style={{ flex: "1 1 0", background: "var(--bg)" }}&gt;
+  &lt;div style={{ maxWidth: 400, margin: "0 auto" }}&gt;
+    ...
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+        <div class="explanation">
+          <p><strong>flex: "1 1 0"</strong> means the panel takes all remaining space after the branding panel. The inner form is constrained to 400px and centered. On mobile (<code>lg:hidden</code> removes the branding panel), the form fills the full viewport.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New</span>
+        <h3>C — Mobile logo injection (<code>lg:hidden</code>)</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-new">
+          <div class="code-diff-label">Added inside LoginForm, above the heading</div>
+          <pre><code>&lt;div className="flex items-center gap-2.5 mb-10 lg:hidden"&gt;
+  &lt;div style={{ background: "#3b82f6" }}&gt;
+    &lt;Globe size={20} color="#fff" /&gt;
+  &lt;/div&gt;
+  &lt;span&gt;Web Portal&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+        <div class="explanation">
+          <p>The branding panel is <code>hidden</code> on mobile (<code>class="hidden lg:flex"</code>), so this small logo block fills the gap. It's hidden on large screens (<code>lg:hidden</code>) to avoid duplication.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 7. portal-app.tsx -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="portalapp">
+    <h2><span class="file-pill">src/components/portal-app.tsx</span></h2>
+    <p class="section-why">The main client shell — all theme state lives here. Three changes were made to support system mode.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>A — <code>applyThemeClass</code> reads OS preference for system mode</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>function applyThemeClass(t: "dark" | "light") {
+  const root = document.documentElement;
+  if (t === "light") root.classList.add("light");
+  else root.classList.remove("light");
+}</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>function applyThemeClass(t: Theme) {
+  const root = document.documentElement;
+  const isDark =
+    t === "system"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : t === "dark";
+  if (isDark) root.classList.remove("light");
+  else root.classList.add("light");
+}</code></pre>
+        </div>
+        <div class="explanation">
+          <p><code>window.matchMedia("(prefers-color-scheme: dark)").matches</code> returns <code>true</code> if the OS is in dark mode. This is a synchronous read — no async needed. The function now adds or removes the <code>.light</code> CSS class on <code>&lt;html&gt;</code> based on the resolved preference.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New</span>
+        <h3>B — <code>useEffect</code> listens for OS preference changes</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-new">
+          <div class="code-diff-label">New effect — reacts to system theme switching</div>
+          <pre><code>useEffect(() => {
+  if (theme !== "system") return;
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  const handler = () =&gt; applyThemeClass("system");
+  mq.addEventListener("change", handler);
+  return () =&gt; mq.removeEventListener("change", handler);
+}, [theme]);</code></pre>
+        </div>
+        <div class="explanation">
+          <p>When the user switches their OS from dark to light (or vice versa) while in System mode, this effect fires immediately and updates the CSS class. The cleanup function removes the listener when the effect re-runs (e.g. user switches to "dark" mode) — preventing memory leaks. The effect only activates when <code>theme === "system"</code>; for dark/light it returns early.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>C — Toggle cycles through 3 states via lookup table</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before — binary toggle</div>
+          <pre><code>const next: "dark" | "light" = theme === "dark" ? "light" : "dark";</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After — 3-state cycle</div>
+          <pre><code>const cycle: Record&lt;Theme, Theme&gt; = {
+  dark: "light",
+  light: "system",
+  system: "dark",
+};
+const next = cycle[theme];</code></pre>
+        </div>
+        <div class="explanation">
+          <p>A <code>Record</code> lookup table maps each state to its successor. This is more readable and maintainable than chained ternaries. The cycle is: <strong>dark → light → system → dark</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 8. sidebar.tsx -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="sidebar">
+    <h2><span class="file-pill">src/components/sidebar.tsx</span></h2>
+    <p class="section-why">The sidebar shows the avatar and the theme toggle. Both needed updating for the new features.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>A — Avatar shows emoji if <code>avatarIcon</code> is set</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>&lt;div style={{ background: profile.avatarColor, color: "#fff" }}&gt;
+  {profile.initial}
+&lt;/div&gt;</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>&lt;div
+  style={{
+    background: profile.avatarIcon ? "transparent" : profile.avatarColor,
+    fontSize: profile.avatarIcon ? "18px" : undefined,
+  }}
+&gt;
+  {profile.avatarIcon || profile.initial}
+&lt;/div&gt;</code></pre>
+        </div>
+        <div class="explanation">
+          <p>When <code>profile.avatarIcon</code> is a non-empty string (e.g. <code>"💻"</code>), the colored background is hidden and the font size is increased to 18px so the emoji is visible. When empty, the original colored circle + letter behavior is preserved via the <code>||</code> fallback.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>B — Theme toggle shows current mode with correct icon</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before — shows what you switch TO</div>
+          <pre><code>{theme === "dark"
+  ? &lt;&gt;&lt;Sun size={13} /&gt; Light&lt;/&gt;
+  : &lt;&gt;&lt;Moon size={13} /&gt; Dark&lt;/&gt;
+}</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After — shows current mode, cycles on click</div>
+          <pre><code>{theme === "dark"   &amp;&amp; &lt;&gt;&lt;Moon size={13} /&gt;    Dark&lt;/&gt;}
+{theme === "light"  &amp;&amp; &lt;&gt;&lt;Sun size={13} /&gt;     Light&lt;/&gt;}
+{theme === "system" &amp;&amp; &lt;&gt;&lt;Monitor size={13} /&gt; System&lt;/&gt;}</code></pre>
+        </div>
+        <div class="explanation">
+          <p>The old button showed the <em>destination</em> state ("Light" when in dark mode). The new button shows the <em>current</em> state with its icon (Moon for dark, Sun for light, Monitor for system). The tooltip on <code>title</code> explains what clicking will do next.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 9. appearance-panel.tsx -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="appearance">
+    <h2><span class="file-pill">src/components/settings/appearance-panel.tsx</span></h2>
+    <p class="section-why">The Appearance settings panel needed a third "System" card and a corrected save handler.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>A — Theme picker: 3 cards using object array</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before — plain string array</div>
+          <pre><code>{(["dark", "light"] as const).map((t) =&gt; (
+  &lt;button key={t}&gt;
+    {t === "dark" ? &lt;Moon /&gt; : &lt;Sun /&gt;}
+    {t}
+  &lt;/button&gt;
+))}</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After — object array with pre-bound icons</div>
+          <pre><code>{([
+  { id: "dark",   label: "Dark",   icon: &lt;Moon size={20} /&gt;    },
+  { id: "light",  label: "Light",  icon: &lt;Sun size={20} /&gt;     },
+  { id: "system", label: "System", icon: &lt;Monitor size={20} /&gt; },
+] as const).map((t) =&gt; (
+  &lt;button key={t.id}&gt;{t.icon}{t.label}&lt;/button&gt;
+))}</code></pre>
+        </div>
+        <div class="explanation">
+          <p>Each entry in the array carries its own icon component, eliminating conditional logic inside the <code>map</code>. Adding a fourth theme option in the future only requires adding one object to the array.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-mod">Modified</span>
+        <h3>B — <code>handleSave</code> applies system theme correctly on save</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Before</div>
+          <pre><code>if (theme === "light") {
+  document.documentElement.classList.add("light");
+} else {
+  document.documentElement.classList.remove("light");
+}</code></pre>
+        </div>
+        <div class="code-diff diff-after">
+          <div class="code-diff-label">After</div>
+          <pre><code>const isDark =
+  theme === "system"
+    ? window.matchMedia("(prefers-color-scheme: dark)").matches
+    : theme === "dark";
+if (isDark) document.documentElement.classList.remove("light");
+else document.documentElement.classList.add("light");</code></pre>
+        </div>
+        <div class="explanation">
+          <p>Without this fix, saving "System" as the theme would incorrectly treat it as "dark" (the <code>else</code> branch). The fix reads the OS preference at save-time and applies the correct class immediately, so the user sees the change without a page reload.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 10. profile-panel.tsx -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="profile">
+    <h2><span class="file-pill">src/components/settings/profile-panel.tsx</span></h2>
+    <p class="section-why">Completely rewritten to add auto-initials, emoji icon picker, and live avatar preview.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New</span>
+        <h3>A — <code>deriveInitial()</code> — monogram from display name</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-new">
+          <div class="code-diff-label">New utility function</div>
+          <pre><code>function deriveInitial(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return "?";
+  if (words.length === 1) return words[0][0].toUpperCase();
+  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+}</code></pre>
+        </div>
+        <table>
+          <thead><tr><th>Input</th><th>Output</th><th>Reason</th></tr></thead>
+          <tbody>
+            <tr><td>"Quoc Thien"</td><td>QT</td><td>First + last word initials</td></tr>
+            <tr><td>"Alice"</td><td>A</td><td>Single word → first letter</td></tr>
+            <tr><td>"John Michael Doe"</td><td>JD</td><td>First + last word only</td></tr>
+            <tr><td>""</td><td>?</td><td>Empty name fallback</td></tr>
+          </tbody>
+        </table>
+        <div class="explanation">
+          <p>Replaces the manual "Avatar Initial (single character)" input. The monogram updates live as the user types their name. Only the first character is persisted in the DB (the <code>initial</code> field) for backward compatibility.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New</span>
+        <h3>B — <code>AVATAR_ICONS</code> — 20 emoji presets + letter fallback</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-new">
+          <div class="code-diff-label">Constant defined at module level</div>
+          <pre><code>const AVATAR_ICONS = [
+  "",                           // empty = use letter monogram
+  "🚀", "💻", "🎯", "📊", "⚡",
+  "🌟", "🔥", "💡", "🎨", "🏗️",
+  "🧠", "💰", "🌐", "📈", "🛠️",
+  "🎮", "📚", "🏆", "🧩", "🦋",
+];</code></pre>
+        </div>
+        <div class="explanation">
+          <p>The first entry (<code>""</code>) represents "no emoji — use auto-generated initials". Its tile in the picker shows the current monogram letters so the user can see what the fallback looks like. The 20 emoji cover common use-cases: tech, productivity, finance, creativity, and gaming.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-rm">Removed</span>
+        <h3>C — Manual "Avatar Initial" input removed</h3>
+      </div>
+      <div class="change-block-body">
+        <div class="code-diff diff-before">
+          <div class="code-diff-label">Removed from the form</div>
+          <pre><code>&lt;label&gt;
+  &lt;span&gt;Avatar Initial (single character)&lt;/span&gt;
+  &lt;input
+    value={initial}
+    onChange={(e) =&gt; setInitial(e.target.value.charAt(0))}
+    maxLength={1}
+    style={{ width: 60 }}
+  /&gt;
+&lt;/label&gt;</code></pre>
+        </div>
+        <div class="explanation">
+          <p>Removed because the initial is now automatically derived from the name via <code>deriveInitial()</code>. Keeping the manual input would create an inconsistency: the user could set name "Alice" but initial "Z". Auto-derivation ensures they always match.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 11. DEPLOY.md -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="deploy">
+    <h2><span class="file-pill">DEPLOY.md</span> <span style="font-size:12px;font-weight:400;color:var(--fg-subtle)">(new file)</span></h2>
+    <p class="section-why">A deployment guide created to document the Vercel setup process and the root cause of the <code>localhost:7854</code> redirect bug.</p>
+
+    <div class="change-block">
+      <div class="change-block-header">
+        <span class="change-label label-new">New</span>
+        <h3>Contents of <code>DEPLOY.md</code></h3>
+      </div>
+      <div class="change-block-body">
+        <table>
+          <thead><tr><th>Section</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>Root Cause</td><td>Explains why <code>NEXTAUTH_URL=localhost:7854</code> in Vercel env causes all redirects to go to localhost</td></tr>
+            <tr><td>Step-by-Step Fix</td><td>Delete <code>NEXTAUTH_URL</code>, unify <code>AUTH_SECRET</code> + <code>NEXTAUTH_SECRET</code>, redeploy</td></tr>
+            <tr><td>Env Var Reference</td><td>Table: local vs Vercel values for each variable</td></tr>
+            <tr><td>Seed Data</td><td>Call <code>/api/setup</code> after first deploy to populate Neon tables</td></tr>
+            <tr><td>Vercel CLI</td><td>Quick commands to manage env vars without the dashboard</td></tr>
+            <tr><td>Troubleshooting</td><td>Symptom → Cause → Fix table for common issues</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 12. Summary -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section class="change-section" id="summary">
+    <h2>Summary Table</h2>
+    <p class="section-why">All 11 changed files at a glance.</p>
+
+    <div class="change-block">
+      <div class="change-block-body" style="padding: 0;">
+        <table class="summary-table">
+          <thead>
+            <tr><th>File</th><th>Change Type</th><th>Feature</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>src/lib/types.ts</td><td>Modified</td><td>Theme union + avatarIcon field + better defaults</td></tr>
+            <tr><td>src/lib/db/schema.ts</td><td>Modified</td><td>New profileAvatarIcon DB column</td></tr>
+            <tr><td>src/lib/db/index.ts</td><td>Modified</td><td>ALTER TABLE migration for existing DBs</td></tr>
+            <tr><td>src/lib/store.ts</td><td>Modified</td><td>Read/write mapping for avatarIcon + system theme</td></tr>
+            <tr><td>src/lib/seed-data.ts</td><td>Modified</td><td>Real name + 💻 emoji in seed profile</td></tr>
+            <tr><td>src/app/login/page.tsx</td><td>Rewritten</td><td>Split-screen SaaS login layout</td></tr>
+            <tr><td>src/components/portal-app.tsx</td><td>Modified</td><td>System theme: media query + 3-state cycle</td></tr>
+            <tr><td>src/components/sidebar.tsx</td><td>Modified</td><td>Emoji avatar display + Monitor icon + current-mode toggle</td></tr>
+            <tr><td>src/components/settings/appearance-panel.tsx</td><td>Modified</td><td>System theme card + apply-on-save fix</td></tr>
+            <tr><td>src/components/settings/profile-panel.tsx</td><td>Rewritten</td><td>Auto-initials + emoji picker + live preview</td></tr>
+            <tr><td>DEPLOY.md</td><td>New file</td><td>Vercel deployment guide</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll("section[id]");
+  const links = document.querySelectorAll("nav.sidenav a");
+
+  function updateActive() {
+    let current = "";
+    sections.forEach((s) => {
+      if (window.scrollY + 120 >= s.offsetTop) current = s.id;
+    });
+    links.forEach((a) => {
+      a.classList.toggle("active", a.getAttribute("href") === "#" + current);
+    });
+  }
+
+  window.addEventListener("scroll", updateActive, { passive: true });
+  updateActive();
+</script>
+</body>
+</html>
