@@ -31,7 +31,16 @@ import { DEFAULT_SETTINGS } from "./types";
 
 export const seedData: PortalData = {
   version: 2,
-  settings: DEFAULT_SETTINGS,
+  settings: {
+    ...DEFAULT_SETTINGS,
+    profile: {
+      name: "Quoc Thien",
+      initial: "Q",
+      avatarColor: "#3b82f6",
+      role: "Software Developer",
+      avatarIcon: "💻",
+    },
+  },
 
   // ─── Categories ────────────────────────────────────────────────────────────
   categories: [

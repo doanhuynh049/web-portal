@@ -13,7 +13,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { Search, Plus, LayoutGrid, FolderOpen } from "lucide-react";
-import type { PortalData, Category, Link, Project } from "@/lib/types";
+import type { PortalData, Category, Link, Project, Theme } from "@/lib/types";
 import { saveSettings } from "@/actions/links";
 import { Sidebar } from "./sidebar";
 import { LinkCard } from "./link-card";
@@ -38,28 +38,40 @@ export function PortalApp({ data }: Props) {
   // ── Theme ─────────────────────────────────────────────────────────────────
   // Always boot from localStorage so server re-renders (revalidatePath) never
   // flash the wrong theme. "dark" is the SSR default (no class = dark).
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<Theme>("dark");
+
+  function applyThemeClass(t: Theme) {
+    const root = document.documentElement;
+    const isDark =
+      t === "system"
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+        : t === "dark";
+    if (isDark) root.classList.remove("light");
+    else root.classList.add("light");
+  }
 
   // On first mount: read localStorage → apply class.
-  // We do this in a single effect so there is at most one DOM update.
   useEffect(() => {
-    const saved = (localStorage.getItem("portal-theme") as "dark" | "light") ?? settings.theme ?? "dark";
+    const saved = (localStorage.getItem("portal-theme") as Theme | null) ?? settings.theme ?? "dark";
     setTheme(saved);
     applyThemeClass(saved);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function applyThemeClass(t: "dark" | "light") {
-    const root = document.documentElement;
-    if (t === "light") root.classList.add("light");
-    else root.classList.remove("light");
-  }
+  // When theme is "system", listen for OS preference changes.
+  useEffect(() => {
+    if (theme !== "system") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => applyThemeClass("system");
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, [theme]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleToggleTheme() {
-    const next: "dark" | "light" = theme === "dark" ? "light" : "dark";
+    const cycle: Record<Theme, Theme> = { dark: "light", light: "system", system: "dark" };
+    const next = cycle[theme];
     setTheme(next);
     applyThemeClass(next);
     localStorage.setItem("portal-theme", next);
-    // Persist to JSON so server re-renders don't reset this preference
     saveSettings({ ...settings, theme: next });
   }
 

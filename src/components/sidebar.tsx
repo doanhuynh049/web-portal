@@ -10,16 +10,16 @@
 "use client";
 
 import Link from "next/link";
-import { Settings, Sun, Moon, Check, LogOut } from "lucide-react";
+import { Settings, Sun, Moon, Monitor, Check, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
-import type { Category, Link as LinkType, UserProfile } from "@/lib/types";
+import type { Category, Link as LinkType, UserProfile, Theme } from "@/lib/types";
 
 interface Props {
   categories: Category[];
   links: LinkType[];
   activeCategoryId: string | null;
   onSelectCategory: (id: string | null) => void;
-  theme: "dark" | "light";
+  theme: Theme;
   onToggleTheme: () => void;
   profile: UserProfile;
 }
@@ -147,9 +147,9 @@ export function Sidebar({
           {/* Avatar */}
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 select-none"
-            style={{ background: profile.avatarColor, color: "#fff" }}
+            style={{ background: profile.avatarIcon ? "transparent" : profile.avatarColor, color: "#fff", fontSize: profile.avatarIcon ? "18px" : undefined }}
           >
-            {profile.initial}
+            {profile.avatarIcon || profile.initial}
           </div>
           <div className="flex-1 min-w-0">
             <p
@@ -166,21 +166,19 @@ export function Sidebar({
 
         {/* Actions row: theme toggle + settings + sign-out */}
         <div className="flex items-center gap-1">
-          {/* Theme toggle */}
+          {/* Theme toggle — cycles dark → light → system */}
           <button
             onClick={onToggleTheme}
             className="btn btn-ghost btn-sm flex-1 justify-center"
-            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            title={
+              theme === "dark" ? "Dark mode (click for Light)" :
+              theme === "light" ? "Light mode (click for System)" :
+              "System mode (click for Dark)"
+            }
           >
-            {theme === "dark" ? (
-              <>
-                <Sun size={13} /> Light
-              </>
-            ) : (
-              <>
-                <Moon size={13} /> Dark
-              </>
-            )}
+            {theme === "dark" && <><Moon size={13} /> Dark</>}
+            {theme === "light" && <><Sun size={13} /> Light</>}
+            {theme === "system" && <><Monitor size={13} /> System</>}
           </button>
 
           {/* Settings link */}

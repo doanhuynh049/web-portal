@@ -82,12 +82,16 @@ export async function ensureTables(): Promise<void> {
         id                   INTEGER PRIMARY KEY DEFAULT 1,
         theme                TEXT    NOT NULL DEFAULT 'dark',
         default_view         TEXT    NOT NULL DEFAULT 'links',
-        profile_name         TEXT    NOT NULL DEFAULT 'My Portal',
-        profile_initial      TEXT    NOT NULL DEFAULT 'M',
+        profile_name         TEXT    NOT NULL DEFAULT 'Quoc Thien',
+        profile_initial      TEXT    NOT NULL DEFAULT 'Q',
         profile_avatar_color TEXT    NOT NULL DEFAULT '#3b82f6',
-        profile_role         TEXT    NOT NULL DEFAULT 'Developer',
+        profile_role         TEXT    NOT NULL DEFAULT 'Software Developer',
+        profile_avatar_icon  TEXT    DEFAULT '',
         version              INTEGER NOT NULL DEFAULT 2
       )
+    `;
+    await sqlHttp`
+      ALTER TABLE portal_settings ADD COLUMN IF NOT EXISTS profile_avatar_icon TEXT DEFAULT ''
     `;
     await sqlHttp`
       CREATE TABLE IF NOT EXISTS portal_users (

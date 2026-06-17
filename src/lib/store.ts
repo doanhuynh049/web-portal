@@ -59,13 +59,14 @@ async function readFromNeon(): Promise<PortalData> {
 
   const settings: PortalSettings = settingsRow
     ? {
-        theme: settingsRow.theme as "dark" | "light",
+        theme: settingsRow.theme as "dark" | "light" | "system",
         defaultView: settingsRow.defaultView as "links" | "projects",
         profile: {
           name: settingsRow.profileName,
           initial: settingsRow.profileInitial,
           avatarColor: settingsRow.profileAvatarColor,
           role: settingsRow.profileRole,
+          avatarIcon: settingsRow.profileAvatarIcon ?? "",
         },
       }
     : DEFAULT_SETTINGS;
@@ -258,6 +259,7 @@ async function writeToNeon(data: PortalData): Promise<void> {
       profileInitial: s.profile.initial,
       profileAvatarColor: s.profile.avatarColor,
       profileRole: s.profile.role,
+      profileAvatarIcon: s.profile.avatarIcon ?? "",
       version: data.version,
     })
     .onConflictDoUpdate({
@@ -269,6 +271,7 @@ async function writeToNeon(data: PortalData): Promise<void> {
         profileInitial: drizzleSql`excluded.profile_initial`,
         profileAvatarColor: drizzleSql`excluded.profile_avatar_color`,
         profileRole: drizzleSql`excluded.profile_role`,
+        profileAvatarIcon: drizzleSql`excluded.profile_avatar_icon`,
         version: drizzleSql`excluded.version`,
       },
     });

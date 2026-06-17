@@ -44,19 +44,21 @@ export const PROJECT_TAB_ORDER: LinkType[] = [
 
 // ── Theme ─────────────────────────────────────────────────────────────────────
 
-export type Theme = "dark" | "light";
+export type Theme = "dark" | "light" | "system";
 
 // ── User profile ──────────────────────────────────────────────────────────────
 
 export interface UserProfile {
   /** Display name, e.g. "Thanh D." */
   name: string;
-  /** Single character shown in the avatar circle */
+  /** Single character shown in the avatar circle (auto-derived from name) */
   initial: string;
   /** Hex background color for the avatar */
   avatarColor: string;
   /** Optional job title / role */
   role: string;
+  /** Optional emoji icon override for the avatar (e.g. "🚀") */
+  avatarIcon?: string;
 }
 
 // ── Portal settings ───────────────────────────────────────────────────────────
@@ -206,9 +208,10 @@ export const DEFAULT_SETTINGS: PortalSettings = {
   theme: "dark",
   defaultView: "links",
   profile: {
-    name: "My Portal",
-    initial: "M",
+    name: "Quoc Thien",
+    initial: "Q",
     avatarColor: "#3b82f6",
-    role: "Developer",
+    role: "Software Developer",
+    avatarIcon: "",
   },
 };

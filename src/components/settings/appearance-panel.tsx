@@ -7,7 +7,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Sun, Moon, LayoutGrid, FolderOpen, Check } from "lucide-react";
+import { Sun, Moon, Monitor, LayoutGrid, FolderOpen, Check } from "lucide-react";
 import { saveSettings } from "@/actions/links";
 import type { PortalSettings, Theme } from "@/lib/types";
 
@@ -24,12 +24,13 @@ export function AppearancePanel({ settings }: Props) {
   function handleSave() {
     startTransition(async () => {
       await saveSettings({ ...settings, theme, defaultView });
-      // Also apply to current document so preview is instant
-      if (theme === "light") {
-        document.documentElement.classList.add("light");
-      } else {
-        document.documentElement.classList.remove("light");
-      }
+      // Apply to current document so preview is instant
+      const isDark =
+        theme === "system"
+          ? window.matchMedia("(prefers-color-scheme: dark)").matches
+          : theme === "dark";
+      if (isDark) document.documentElement.classList.remove("light");
+      else document.documentElement.classList.add("light");
       localStorage.setItem("portal-theme", theme);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
@@ -51,27 +52,34 @@ export function AppearancePanel({ settings }: Props) {
           Color Theme
         </p>
         <div className="flex gap-3">
-          {(["dark", "light"] as const).map((t) => (
+          {([
+            { id: "dark", label: "Dark", icon: <Moon size={20} /> },
+            { id: "light", label: "Light", icon: <Sun size={20} /> },
+            { id: "system", label: "System", icon: <Monitor size={20} /> },
+          ] as const).map((t) => (
             <button
-              key={t}
-              onClick={() => setTheme(t)}
+              key={t.id}
+              onClick={() => setTheme(t.id)}
               className="flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-colors"
               style={{
-                borderColor: theme === t ? "var(--accent)" : "var(--border)",
-                background: theme === t ? "var(--accent-bg)" : "var(--card)",
+                borderColor: theme === t.id ? "var(--accent)" : "var(--border)",
+                background: theme === t.id ? "var(--accent-bg)" : "var(--card)",
               }}
             >
-              {t === "dark" ? (
-                <Moon size={20} style={{ color: theme === t ? "var(--accent)" : "var(--fg-muted)" }} />
-              ) : (
-                <Sun size={20} style={{ color: theme === t ? "var(--accent)" : "var(--fg-muted)" }} />
-              )}
-              <span className="text-sm font-medium capitalize" style={{ color: theme === t ? "var(--accent)" : "var(--fg-muted)" }}>
-                {t}
+              <span style={{ color: theme === t.id ? "var(--accent)" : "var(--fg-muted)" }}>
+                {t.icon}
+              </span>
+              <span className="text-sm font-medium" style={{ color: theme === t.id ? "var(--accent)" : "var(--fg-muted)" }}>
+                {t.label}
               </span>
             </button>
           ))}
         </div>
+        {theme === "system" && (
+          <p className="text-xs mt-2" style={{ color: "var(--fg-subtle)" }}>
+            Follows your OS dark/light mode preference automatically.
+          </p>
+        )}
       </div>
 
       {/* Default view */}

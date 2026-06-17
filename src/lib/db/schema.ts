@@ -70,9 +70,10 @@ export const portalSettings = pgTable("portal_settings", {
   id: integer("id").primaryKey().default(1),
   theme: text("theme").notNull().default("dark"),
   defaultView: text("default_view").notNull().default("links"),
-  profileName: text("profile_name").notNull().default("My Portal"),
-  profileInitial: text("profile_initial").notNull().default("M"),
+  profileName: text("profile_name").notNull().default("Quoc Thien"),
+  profileInitial: text("profile_initial").notNull().default("Q"),
   profileAvatarColor: text("profile_avatar_color").notNull().default("#3b82f6"),
-  profileRole: text("profile_role").notNull().default("Developer"),
+  profileRole: text("profile_role").notNull().default("Software Developer"),
+  profileAvatarIcon: text("profile_avatar_icon").default(""),
   version: integer("version").notNull().default(2),
 });
