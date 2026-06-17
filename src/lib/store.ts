@@ -334,12 +334,27 @@ function migrateJson(data: PortalData): PortalData {
 const USE_DB = !!process.env.DATABASE_URL;
 
 // ── Circuit breaker: skip Neon for CIRCUIT_RESET_MS after a failure ──────────
+// State is stored on globalThis so it survives Turbopack/HMR module
+// re-evaluations between requests in Next.js dev mode.
 const CIRCUIT_RESET_MS = 60_000; // 1 minute
-let neonLastFailure: number | null = null;
+
+declare global {
+  // eslint-disable-next-line no-var
+  var _portalNeonLastFailure: number | null | undefined;
+}
+
+function getNeonLastFailure(): number | null {
+  return globalThis._portalNeonLastFailure ?? null;
+}
+
+function setNeonLastFailure(ts: number | null) {
+  globalThis._portalNeonLastFailure = ts;
+}
 
 function neonCircuitOpen(): boolean {
-  if (neonLastFailure === null) return false;
-  return Date.now() - neonLastFailure < CIRCUIT_RESET_MS;
+  const last = getNeonLastFailure();
+  if (last === null) return false;
+  return Date.now() - last < CIRCUIT_RESET_MS;
 }
 
 export async function readData(): Promise<PortalData> {
@@ -347,7 +362,7 @@ export async function readData(): Promise<PortalData> {
     try {
       return await readFromNeon();
     } catch (err) {
-      neonLastFailure = Date.now();
+      setNeonLastFailure(Date.now());
       console.warn("[web-portal] Neon DB read failed, falling back to JSON file:", (err as Error).message);
     }
   }
@@ -360,7 +375,7 @@ export async function writeData(data: PortalData): Promise<void> {
       await writeToNeon(data);
       return;
     } catch (err) {
-      neonLastFailure = Date.now();
+      setNeonLastFailure(Date.now());
       console.warn("[web-portal] Neon DB write failed, falling back to JSON file:", (err as Error).message);
     }
   }

@@ -28,10 +28,14 @@ export const hasDb = !!db;
 
 // ── DDL: each table as a separate statement (neon HTTP = one stmt at a time) ─
 
-let tablesInitialized = false;
+// Stored on globalThis so Turbopack/HMR module re-evaluations don't reset it.
+declare global {
+  // eslint-disable-next-line no-var
+  var _portalTablesInitialized: boolean | undefined;
+}
 
 export async function ensureTables(): Promise<void> {
-  if (!DATABASE_URL || !sqlHttp || tablesInitialized) return;
+  if (!DATABASE_URL || !sqlHttp || globalThis._portalTablesInitialized) return;
   try {
     // Execute each CREATE TABLE separately — neon HTTP supports one stmt/call
     await sqlHttp`
@@ -102,7 +106,7 @@ export async function ensureTables(): Promise<void> {
         created_at    TEXT NOT NULL
       )
     `;
-    tablesInitialized = true;
+    globalThis._portalTablesInitialized = true;
     console.log("[web-portal] DB tables ready ✓");
   } catch (err) {
     console.error("[web-portal] Failed to initialize DB tables:", err);
