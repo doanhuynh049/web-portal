@@ -1,0 +1,956 @@
+{
+  "version": 2,
+  "settings": {
+    "theme": "light",
+    "defaultView": "links",
+    "profile": {
+      "name": "My Portal",
+      "initial": "M",
+      "avatarColor": "#3b82f6",
+      "role": "Developer"
+    }
+  },
+  "categories": [
+    {
+      "id": "cat-webapps",
+      "name": "Personal Projects",
+      "color": "#3b82f6",
+      "description": "Self-built web applications",
+      "order": 2
+    },
+    {
+      "id": "cat-services",
+      "name": "Backend Services",
+      "color": "#8b5cf6",
+      "description": "Java Spring Boot, FastAPI and Python services",
+      "order": 1
+    },
+    {
+      "id": "cat-hitachi",
+      "name": "Work — Hitachi",
+      "color": "#0ea5e9",
+      "description": "Hitachi internal tools and portals",
+      "order": 3
+    },
+    {
+      "id": "cat-directv",
+      "name": "Work — DirecTV",
+      "color": "#f59e0b",
+      "description": "DirecTV work resources",
+      "order": 4
+    },
+    {
+      "id": "cat-dev",
+      "name": "Development",
+      "color": "#22c55e",
+      "description": "Dev tools, cloud consoles, and platforms",
+      "order": 5
+    },
+    {
+      "id": "cat-personal",
+      "name": "Personal",
+      "color": "#ec4899",
+      "description": "Personal resources, learning, and misc",
+      "order": 6
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-vn-stocks",
+      "name": "VN Stocks Dashboard",
+      "description": "Personal Vietnam stock market dashboard. Live data for HOSE/HNX. AI-powered analysis and news digest.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-stocks-local",
+        "lnk-stocks-prod",
+        "lnk-stocks-repo"
+      ],
+      "techStack": [
+        "Next.js 16",
+        "React 19",
+        "Neon Postgres",
+        "Vercel",
+        "Tailwind v4"
+      ],
+      "backlog": [
+        "Add watchlist feature",
+        "Add earnings calendar",
+        "Fix ETF loading speed",
+        "Add mobile layout",
+        "Add dark/light theme toggle"
+      ],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-targets",
+      "name": "Targets 2026",
+      "description": "Full-stack goal and target management app. Track yearly targets across health, career, finance, and learning.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-targets-local",
+        "lnk-targets-prod",
+        "lnk-targets-api"
+      ],
+      "techStack": [
+        "Next.js 16",
+        "Prisma",
+        "PostgreSQL",
+        "Vercel",
+        "Tailwind v4"
+      ],
+      "backlog": [
+        "Add progress charts",
+        "Add reminders / notifications",
+        "Mobile responsive improvements"
+      ],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-learning",
+      "name": "AI Learning Coach",
+      "description": "AI-powered personalized learning app. Enter any topic and get a full day-by-day study plan with quizzes and flashcards.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-learning-local",
+        "lnk-learning-prod"
+      ],
+      "techStack": [
+        "Next.js 16",
+        "Tailwind v4",
+        "AI APIs"
+      ],
+      "backlog": [
+        "Progress persistence",
+        "Spaced repetition for flashcards"
+      ],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-ielts",
+      "name": "IELTS Pro",
+      "description": "Full-stack IELTS practice app with NestJS backend and Vite frontend. Writing + Reading + Listening + Speaking modules.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-ielts-frontend",
+        "lnk-ielts-backend",
+        "lnk-ielts-prod"
+      ],
+      "techStack": [
+        "Vite",
+        "React",
+        "NestJS",
+        "TypeScript"
+      ],
+      "backlog": [
+        "Add AI writing feedback",
+        "Add mock test timer"
+      ],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T08:25:33.383Z"
+    },
+    {
+      "id": "proj-football",
+      "name": "Global Football Manager",
+      "description": "Football career + nation-building simulation. Take Vietnam from ASEAN to the FIFA World Cup.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-football-local"
+      ],
+      "techStack": [
+        "Vite",
+        "React",
+        "TypeScript"
+      ],
+      "backlog": [
+        "Add multiplayer mode",
+        "Add league tables",
+        "Add transfer market"
+      ],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-assetiq",
+      "name": "AssetIQ",
+      "description": "Personal finance dashboard with multi-database schema isolation, AI insights, and scheduled report digests.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-assetiq-local"
+      ],
+      "techStack": [
+        "Next.js",
+        "Multi-DB",
+        "AI APIs"
+      ],
+      "backlog": [
+        "Add crypto portfolio tracking",
+        "Add budget planner"
+      ],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-personal-webpage",
+      "name": "Personal Webpage",
+      "description": "Personal portfolio and profile website.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-personal-web-local",
+        "lnk-personal-web-prod"
+      ],
+      "techStack": [],
+      "backlog": [],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-polyglot",
+      "name": "Polyglot Pro",
+      "description": "Multi-language learning app with AI-powered lessons.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-polyglot-local",
+        "lnk-polyglot-prod"
+      ],
+      "techStack": [],
+      "backlog": [],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-career",
+      "name": "Career Hub",
+      "description": "Career knowledge management and AI-assisted job preparation tools.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-career-hub-local",
+        "lnk-career-web-local"
+      ],
+      "techStack": [],
+      "backlog": [],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-linguachat",
+      "name": "LinguaChat",
+      "description": "AI language learning chat interface.",
+      "categoryId": "cat-webapps",
+      "linkIds": [
+        "lnk-lingua-local"
+      ],
+      "techStack": [],
+      "backlog": [],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "proj-backend-services",
+      "name": "Backend Services",
+      "description": "Shared microservices: crypto data, English content, knowledge base, stock data.",
+      "categoryId": "cat-services",
+      "linkIds": [
+        "lnk-crypto-svc",
+        "lnk-english-svc",
+        "lnk-knowledge-svc",
+        "lnk-stock-svc"
+      ],
+      "techStack": [
+        "Spring Boot",
+        "FastAPI",
+        "Python",
+        "Java"
+      ],
+      "backlog": [],
+      "devNotes": "",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    }
+  ],
+  "links": [
+    {
+      "id": "lnk-stocks-local",
+      "title": "VN Stocks — Local Dev",
+      "url": "http://localhost:4962",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Local development server for VN Stocks dashboard",
+      "usageGuide": "Run `npm run dev` in stock-webpage/. Uses .env.local for DB credentials.",
+      "knownIssues": "Requires local Neon TCP connection. Use HTTPS tunnel if on Vercel.",
+      "tags": [
+        "stocks",
+        "vn",
+        "nextjs",
+        "dev"
+      ],
+      "status": "active",
+      "pinned": true,
+      "projectId": "proj-vn-stocks",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-stocks-prod",
+      "title": "VN Stocks — Production",
+      "url": "https://stock-webpage.vercel.app",
+      "categoryId": "cat-webapps",
+      "linkType": "Production",
+      "purpose": "Live stock dashboard for HOSE/HNX markets",
+      "usageGuide": "Deployed on Vercel. Uses Neon HTTP driver. Auto-deploys from main branch.",
+      "knownIssues": "ETF tab loads slowly. No .cache/ disk on Vercel — use localStorage.",
+      "tags": [
+        "stocks",
+        "vn",
+        "vercel",
+        "finance"
+      ],
+      "status": "active",
+      "pinned": true,
+      "projectId": "proj-vn-stocks",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-stocks-repo",
+      "title": "VN Stocks — GitHub",
+      "url": "https://github.com/quathd-t/stock-webpage",
+      "categoryId": "cat-dev",
+      "linkType": "Repository",
+      "purpose": "Source code for VN Stocks dashboard",
+      "usageGuide": "Main branch is protected. Create feature branches for all changes.",
+      "knownIssues": "",
+      "tags": [
+        "github",
+        "nextjs",
+        "typescript"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "projectId": "proj-vn-stocks",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-targets-local",
+      "title": "Targets 2026 — Local Dev",
+      "url": "http://localhost:7329",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Local development for Targets 2026 app",
+      "usageGuide": "Run `npm run dev` in target-webpage/. Port 7329.",
+      "knownIssues": "",
+      "tags": [
+        "targets",
+        "nextjs",
+        "prisma",
+        "dev"
+      ],
+      "status": "active",
+      "pinned": false,
+      "projectId": "proj-targets",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-targets-prod",
+      "title": "Targets 2026 — Production",
+      "url": "https://target-webpage.vercel.app",
+      "categoryId": "cat-webapps",
+      "linkType": "Production",
+      "purpose": "Live target management app",
+      "usageGuide": "Deployed on Vercel. Update production URL when known.",
+      "knownIssues": "Update production URL with actual Vercel deployment URL",
+      "tags": [
+        "targets",
+        "vercel",
+        "productivity"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "projectId": "proj-targets",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-targets-api",
+      "title": "Target Service — API (FastAPI)",
+      "url": "http://localhost:8000",
+      "categoryId": "cat-services",
+      "linkType": "Backend Service",
+      "purpose": "FastAPI backend for Target Management",
+      "usageGuide": "Run target-service FastAPI server. API docs at /docs.",
+      "knownIssues": "Check target-service/ README for setup instructions.",
+      "tags": [
+        "fastapi",
+        "python",
+        "targets",
+        "api"
+      ],
+      "status": "active",
+      "pinned": false,
+      "projectId": "proj-targets",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-learning-local",
+      "title": "AI Learning Coach — Local Dev",
+      "url": "http://localhost:8523",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Local development for AI Learning Coach",
+      "usageGuide": "Run `npm run dev` in learning_webpage/. Port 8523.",
+      "knownIssues": "",
+      "tags": [
+        "learning",
+        "ai",
+        "nextjs",
+        "dev"
+      ],
+      "status": "active",
+      "pinned": false,
+      "projectId": "proj-learning",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-learning-prod",
+      "title": "AI Learning Coach — Production",
+      "url": "https://learning-webpage.vercel.app",
+      "categoryId": "cat-webapps",
+      "linkType": "Production",
+      "purpose": "Live AI learning coach app",
+      "usageGuide": "Deployed on Vercel. Update with actual deployment URL.",
+      "knownIssues": "https://learning-webpage.vercel.app is not yet deployed. Update URL once deployed.",
+      "tags": [
+        "learning",
+        "ai",
+        "vercel"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "projectId": "proj-learning",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-ielts-frontend",
+      "title": "IELTS Pro — Frontend (Vite)",
+      "url": "http://localhost:5174",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Vite frontend for IELTS Pro",
+      "usageGuide": "Start the Vite dev server in english-webpage/frontend/. Port 5174.",
+      "knownIssues": "Requires NestJS backend on 3001 to be running.",
+      "tags": [
+        "ielts",
+        "vite",
+        "react",
+        "english"
+      ],
+      "status": "active",
+      "pinned": false,
+      "projectId": "proj-ielts",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-ielts-backend",
+      "title": "IELTS Pro — Backend (NestJS)",
+      "url": "http://localhost:3001",
+      "categoryId": "cat-services",
+      "linkType": "Backend Service",
+      "purpose": "NestJS API backend for IELTS Pro",
+      "usageGuide": "Start NestJS in english-webpage/backend/. Swagger at /api.",
+      "knownIssues": "",
+      "tags": [
+        "ielts",
+        "nestjs",
+        "api",
+        "english"
+      ],
+      "status": "active",
+      "pinned": false,
+      "projectId": "proj-ielts",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-football-local",
+      "title": "Football Manager — Local Dev",
+      "url": "http://localhost:5173",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Vietnam football career simulation game",
+      "usageGuide": "Run `npm run dev` (Vite) in football-game/. Default Vite port 5173.",
+      "knownIssues": "",
+      "tags": [
+        "football",
+        "game",
+        "vite",
+        "react"
+      ],
+      "status": "active",
+      "pinned": false,
+      "projectId": "proj-football",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-assetiq-local",
+      "title": "AssetIQ — Local Dev",
+      "url": "http://localhost:3002",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Personal finance and asset management dashboard",
+      "usageGuide": "Start asset_management/ project. Estimated port 3002.",
+      "knownIssues": "Check actual port in asset_management README.",
+      "tags": [
+        "finance",
+        "assets",
+        "dashboard"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "projectId": "proj-assetiq",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-career-hub-local",
+      "title": "Career Knowledge Hub — Local Dev",
+      "url": "http://localhost:3003",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "AI career tutor that never repeats itself — adapts to your learning",
+      "usageGuide": "Run `npm run dev` in career_knowledge_hub/. Estimated port 3003.",
+      "knownIssues": "Verify actual port in package.json",
+      "tags": [
+        "career",
+        "ai",
+        "learning"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-career"
+    },
+    {
+      "id": "lnk-career-web-local",
+      "title": "Career AI — Local Dev",
+      "url": "http://localhost:3004",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "AI-powered career companion for job search and skill gap analysis",
+      "usageGuide": "Run `npm run dev` in career_webpage/. Estimated port 3004.",
+      "knownIssues": "Verify actual port in package.json",
+      "tags": [
+        "career",
+        "ai",
+        "job-search"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-career"
+    },
+    {
+      "id": "lnk-lingua-local",
+      "title": "LinguaChat — Local Dev",
+      "url": "http://localhost:3005",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Conversation-first language learning app powered by Ollama Cloud",
+      "usageGuide": "Run `npm run dev` in new_language/. Estimated port 3005.",
+      "knownIssues": "Verify actual port in package.json",
+      "tags": [
+        "language",
+        "ai",
+        "chat",
+        "learning"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-linguachat"
+    },
+    {
+      "id": "lnk-personal-web-local",
+      "title": "Personal Webpage — Local Dev",
+      "url": "http://localhost:3000",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Personal portfolio site with database-backed admin panel",
+      "usageGuide": "Run `node --watch server.js` in personal-webpage/.",
+      "knownIssues": "",
+      "tags": [
+        "portfolio",
+        "personal",
+        "node"
+      ],
+      "status": "active",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-personal-webpage"
+    },
+    {
+      "id": "lnk-personal-web-prod",
+      "title": "Personal Webpage — Production",
+      "url": "https://personal-webpage.vercel.app",
+      "categoryId": "cat-webapps",
+      "linkType": "Production",
+      "purpose": "Live personal portfolio site",
+      "usageGuide": "Deployed on Vercel. Update with actual deployment URL.",
+      "knownIssues": "Update production URL with actual Vercel deployment URL",
+      "tags": [
+        "portfolio",
+        "personal",
+        "vercel"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-personal-webpage"
+    },
+    {
+      "id": "lnk-polyglot-local",
+      "title": "Polyglot Pro — Local Dev",
+      "url": "http://localhost:3006",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "Learn Thai, Chinese, Japanese, Korean, Spanish, French from Vietnamese or English",
+      "usageGuide": "Run `npm run dev` in third-language/. Estimated port 3006.",
+      "knownIssues": "Verify actual port in package.json",
+      "tags": [
+        "language",
+        "polyglot",
+        "thai",
+        "japanese"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-polyglot"
+    },
+    {
+      "id": "lnk-polyglot-prod",
+      "title": "Polyglot Pro — Production",
+      "url": "https://third-language.vercel.app",
+      "categoryId": "cat-webapps",
+      "linkType": "Production",
+      "purpose": "Live Polyglot Pro language learning app",
+      "usageGuide": "Deployed on Vercel. Update with actual deployment URL.",
+      "knownIssues": "Update production URL with actual Vercel deployment URL",
+      "tags": [
+        "language",
+        "polyglot",
+        "vercel"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-polyglot"
+    },
+    {
+      "id": "lnk-ielts-prod",
+      "title": "IELTS Pro — Production",
+      "url": "https://english-webpage-doanhuynh049s-projects.vercel.app",
+      "categoryId": "cat-webapps",
+      "linkType": "Production",
+      "purpose": "Live IELTS Pro app",
+      "usageGuide": "Vercel project: english-webpage. Update URL once deployed.",
+      "knownIssues": "Vercel preview requires Vercel authentication. Deploy the app and update this URL to the production deployment URL.",
+      "tags": [
+        "ielts",
+        "english",
+        "vercel"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-ielts"
+    },
+    {
+      "id": "lnk-crypto-svc",
+      "title": "Crypto Service (Spring Boot)",
+      "url": "http://localhost:8080",
+      "categoryId": "cat-services",
+      "linkType": "Backend Service",
+      "purpose": "Daily crypto portfolio analysis with AI-powered risk assessment via email",
+      "usageGuide": "Java Spring Boot app in crypto-service/. Start with `mvn spring-boot:run`. Default port 8080.",
+      "knownIssues": "Requires Java 17+. Check application.properties for API keys.",
+      "tags": [
+        "crypto",
+        "java",
+        "spring-boot",
+        "email"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-backend-services"
+    },
+    {
+      "id": "lnk-english-svc",
+      "title": "English Service (Spring Boot)",
+      "url": "http://localhost:8081",
+      "categoryId": "cat-services",
+      "linkType": "Backend Service",
+      "purpose": "Delivers 6 types of English, Japanese, and Thai learning content via email daily",
+      "usageGuide": "Java Spring Boot in english-service/. Change port via server.port in application.properties.",
+      "knownIssues": "Requires email SMTP config. Set server.port=8081 to avoid conflict.",
+      "tags": [
+        "english",
+        "japanese",
+        "thai",
+        "java",
+        "spring-boot",
+        "email"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-backend-services"
+    },
+    {
+      "id": "lnk-knowledge-svc",
+      "title": "Knowledge Service (Spring Boot)",
+      "url": "http://localhost:8082",
+      "categoryId": "cat-services",
+      "linkType": "Backend Service",
+      "purpose": "AI-powered knowledge generation and email delivery for educational content and stock education",
+      "usageGuide": "Java Spring Boot in knowledge-service/. Set server.port=8082.",
+      "knownIssues": "Requires OpenAI/Gemini API key. Set server.port=8082 to avoid conflict.",
+      "tags": [
+        "knowledge",
+        "ai",
+        "java",
+        "spring-boot",
+        "email"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-backend-services"
+    },
+    {
+      "id": "lnk-stock-svc",
+      "title": "Stock Service",
+      "url": "http://localhost:8083",
+      "categoryId": "cat-services",
+      "linkType": "Backend Service",
+      "purpose": "Backend service for stock data processing",
+      "usageGuide": "Check stock-service/ README for startup instructions. Estimated port 8083.",
+      "knownIssues": "Check actual port in README or config.",
+      "tags": [
+        "stocks",
+        "service",
+        "backend"
+      ],
+      "status": "unchecked",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z",
+      "projectId": "proj-backend-services"
+    },
+    {
+      "id": "lnk-hitachi-portal",
+      "title": "Hitachi Global Portal",
+      "url": "https://portal.hitachi.com",
+      "categoryId": "cat-hitachi",
+      "linkType": "Internal Portal",
+      "purpose": "Monthly timesheet submission and HR hub",
+      "usageGuide": "Login with company SSO. Submit timesheet by the 25th of each month.",
+      "knownIssues": "Requires VPN connection when off-network.",
+      "tags": [
+        "hitachi",
+        "timesheet",
+        "hr",
+        "vpn"
+      ],
+      "status": "active",
+      "pinned": true,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-hitachi-jira",
+      "title": "Jira — Hitachi",
+      "url": "https://hitachi.atlassian.net/jira",
+      "categoryId": "cat-hitachi",
+      "linkType": "Tool",
+      "purpose": "Sprint boards and bug tracking for Hitachi projects",
+      "usageGuide": "Check sprint board every morning. Update ticket status before standups.",
+      "knownIssues": "",
+      "tags": [
+        "hitachi",
+        "jira",
+        "sprint",
+        "agile"
+      ],
+      "status": "active",
+      "pinned": true,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-hitachi-confluence",
+      "title": "Confluence — Hitachi",
+      "url": "https://hitachi.atlassian.net/wiki",
+      "categoryId": "cat-hitachi",
+      "linkType": "Documentation",
+      "purpose": "Internal knowledge base and team documentation",
+      "usageGuide": "Search before asking teammates. Document decisions here.",
+      "knownIssues": "",
+      "tags": [
+        "hitachi",
+        "confluence",
+        "docs",
+        "wiki"
+      ],
+      "status": "active",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-dtv-portal",
+      "title": "DirecTV Work Portal",
+      "url": "https://portal.directv.com",
+      "categoryId": "cat-directv",
+      "linkType": "Internal Portal",
+      "purpose": "Main DirecTV work hub — announcements and internal links",
+      "usageGuide": "Check announcements every Monday for team updates.",
+      "knownIssues": "",
+      "tags": [
+        "directv",
+        "dtv",
+        "portal"
+      ],
+      "status": "active",
+      "pinned": true,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-dtv-jenkins",
+      "title": "DirecTV Jenkins CI",
+      "url": "https://ci.directv.com",
+      "categoryId": "cat-directv",
+      "linkType": "Tool",
+      "purpose": "CI/CD pipelines and build automation for DTV projects",
+      "usageGuide": "Login with LDAP credentials. Use vpn-prod tunnel.",
+      "knownIssues": "URL may have been redirected. Verify current URL with team.",
+      "tags": [
+        "directv",
+        "jenkins",
+        "ci",
+        "ldap"
+      ],
+      "status": "redirected",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-github",
+      "title": "GitHub Profile",
+      "url": "https://github.com",
+      "categoryId": "cat-dev",
+      "linkType": "Repository",
+      "purpose": "GitHub account — all personal project repositories",
+      "usageGuide": "Keep SSH key updated annually. Use feature branches.",
+      "knownIssues": "",
+      "tags": [
+        "github",
+        "git",
+        "repos"
+      ],
+      "status": "active",
+      "pinned": true,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-vercel",
+      "title": "Vercel Dashboard",
+      "url": "https://vercel.com/dashboard",
+      "categoryId": "cat-dev",
+      "linkType": "Tool",
+      "purpose": "Deployment dashboard for all Vercel-deployed projects",
+      "usageGuide": "Monitor deployments, check build logs, and manage environment variables here.",
+      "knownIssues": "",
+      "tags": [
+        "vercel",
+        "deploy",
+        "hosting"
+      ],
+      "status": "active",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-neon",
+      "title": "Neon Database Console",
+      "url": "https://console.neon.tech",
+      "categoryId": "cat-dev",
+      "linkType": "Tool",
+      "purpose": "Serverless Postgres DB used by VN Stocks and other projects",
+      "usageGuide": "Monitor branch usage, run queries, and check storage limits.",
+      "knownIssues": "Free tier: 0.5 GB storage limit. Archive old data periodically.",
+      "tags": [
+        "neon",
+        "postgres",
+        "db",
+        "serverless"
+      ],
+      "status": "active",
+      "pinned": false,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    },
+    {
+      "id": "lnk-web-portal-self",
+      "title": "Web Portal (this app)",
+      "url": "http://localhost:7854",
+      "categoryId": "cat-webapps",
+      "linkType": "Local Dev",
+      "purpose": "This link manager portal",
+      "usageGuide": "Run `npm run dev` in web-portal/.",
+      "knownIssues": "",
+      "tags": [
+        "portal",
+        "meta"
+      ],
+      "status": "active",
+      "pinned": true,
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-06-16T00:00:00.000Z"
+    }
+  ]
+}

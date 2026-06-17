@@ -1,0 +1,49 @@
+---
+description: Dual-storage pattern — always use store.ts facade, never call Neon directly; circuit breaker prevents retry spam
+globs: src/lib/**/*.ts,src/actions/**/*.ts,src/app/api/**/*.ts
+alwaysApply: false
+---
+
+# Dual Storage (Neon + JSON fallback)
+
+**Never** import Neon, Drizzle, or `@neondatabase/serverless` directly in pages, components, or actions.
+Always go through the store facade:
+
+```ts
+import { readData, writeData } from "@/lib/store";
+```
+
+## Circuit breaker
+
+`store.ts` has a module-level circuit breaker. After the first Neon ETIMEDOUT:
+- `neonLastFailure` is set to `Date.now()`
+- For the next 60 s, all calls skip Neon and use `data/links.json` instantly
+- After 60 s it retries once (critical for Vercel cold starts where Neon IS reachable)
+
+Do **not** reset `neonLastFailure` manually. Do not add per-request timeouts on top.
+
+## JSON arrays stored as text in Neon
+
+These columns store JSON arrays as text strings: `tags`, `link_ids`, `tech_stack`, `backlog`.
+Use helpers from `store.ts`:
+
+```ts
+function parseArr(raw: string | null | undefined): string[]
+function stringifyArr(arr: string[]): string
+```
+
+Never use `JSON.parse` / `JSON.stringify` inline — use the helpers.
+
+## Adding a new persisted field
+
+1. Add to `src/lib/types.ts` interface
+2. Add column to `src/lib/db/schema.ts`
+3. Add `CREATE TABLE ... ADD COLUMN IF NOT EXISTS` in `src/lib/db/index.ts` → `ensureTables()`
+4. Add read mapping in `readFromNeon()` and write mapping in `writeToNeon()` in `store.ts`
+5. Add migration fallback in `migrateJson()` in `store.ts`
+
+## User storage
+
+User accounts use a parallel dual-store in `src/lib/auth/user-store.ts`.
+- `findUserByEmail(email)` — Neon first, `data/users.json` fallback
+- `createUser(user)` — writes BOTH `data/users.json` AND Neon (best-effort)

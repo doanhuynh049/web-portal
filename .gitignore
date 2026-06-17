@@ -1,0 +1,10 @@
+.next/
+node_modules/
+.env.local
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+
+# data/links.json is intentionally tracked — it IS the database.
+# Remove this comment and add "data/" if you don't want to commit your links.
+

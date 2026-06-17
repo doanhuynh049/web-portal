@@ -1,0 +1,36 @@
+---
+description: Every page that reads live data must export dynamic = "force-dynamic" to prevent static pre-rendering build failures
+globs: src/app/**/page.tsx,src/app/**/layout.tsx
+alwaysApply: false
+---
+
+# Force Dynamic on Data Pages
+
+Any page or layout that calls `readData()` (directly or via a server component) **must** declare:
+
+```ts
+export const dynamic = "force-dynamic";
+```
+
+Place it at the top of the file, right after imports.
+
+## Why
+
+Next.js 16 tries to statically pre-render all pages at build time. `readData()` attempts a
+Neon connection during the build → ETIMEDOUT → build crash. `force-dynamic` tells Next.js
+to render this page at request time only.
+
+## Which pages need it
+
+| File | Needs it? |
+|------|-----------|
+| `src/app/page.tsx` | ✅ yes — calls `readData()` |
+| `src/app/settings/page.tsx` | ✅ yes — calls `readData()` |
+| Any new page that imports from `@/lib/store` | ✅ yes |
+| `/login`, `/register` | ❌ no — pure client components |
+| API routes | ❌ no — always dynamic |
+
+## Do not use `revalidate`
+
+Do not set `export const revalidate = N` as a substitute — it still pre-renders once at build.
+Use `force-dynamic` exclusively for pages that depend on live DB state.
