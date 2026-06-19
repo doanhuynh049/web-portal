@@ -38,6 +38,7 @@ export const portalLinks = pgTable("portal_links", {
   pinned: boolean("pinned").notNull().default(false),
   lastOpenedAt: text("last_opened_at"),
   projectId: text("project_id"),
+  customIconUrl: text("custom_icon_url"),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });

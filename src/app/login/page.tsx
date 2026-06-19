@@ -226,13 +226,14 @@ function LoginForm() {
               />
               <input
                 ref={emailRef}
-                className="input pl-9"
+                className="input"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 autoFocus
                 autoComplete="email"
+                style={{ paddingLeft: "2.25rem" }}
               />
             </div>
           </div>
@@ -249,12 +250,13 @@ function LoginForm() {
                 style={{ color: "var(--fg-subtle)" }}
               />
               <input
-                className="input pl-9 pr-10"
+                className="input"
                 type={showPw ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 autoComplete="current-password"
+                style={{ paddingLeft: "2.25rem", paddingRight: "2.5rem" }}
               />
               <button
                 type="button"

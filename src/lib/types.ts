@@ -111,6 +111,8 @@ export interface Link {
 
   /** Optional: group this link under a Project */
   projectId?: string;
+  /** Optional: override the auto-fetched favicon with a custom image URL */
+  customIconUrl?: string;
 
   createdAt: string;
   updatedAt: string;

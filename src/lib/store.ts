@@ -94,6 +94,7 @@ async function readFromNeon(): Promise<PortalData> {
     pinned: l.pinned,
     lastOpenedAt: l.lastOpenedAt ?? undefined,
     projectId: l.projectId ?? undefined,
+    customIconUrl: l.customIconUrl ?? undefined,
     createdAt: l.createdAt,
     updatedAt: l.updatedAt,
   }));
@@ -187,6 +188,7 @@ async function writeToNeon(data: PortalData): Promise<void> {
           pinned: l.pinned,
           lastOpenedAt: l.lastOpenedAt ?? null,
           projectId: l.projectId ?? null,
+          customIconUrl: l.customIconUrl ?? null,
           createdAt: l.createdAt,
           updatedAt: l.updatedAt,
         }))
@@ -207,6 +209,7 @@ async function writeToNeon(data: PortalData): Promise<void> {
           pinned: drizzleSql`excluded.pinned`,
           lastOpenedAt: drizzleSql`excluded.last_opened_at`,
           projectId: drizzleSql`excluded.project_id`,
+          customIconUrl: drizzleSql`excluded.custom_icon_url`,
           updatedAt: drizzleSql`excluded.updated_at`,
         },
       });
@@ -322,6 +325,9 @@ function migrateJson(data: PortalData): PortalData {
     ...data,
     projects: data.projects.map((p) =>
       p.devNotes !== undefined ? p : { ...p, devNotes: "" }
+    ),
+    links: data.links.map((l) =>
+      "customIconUrl" in l ? l : { ...l, customIconUrl: undefined }
     ),
   };
   return data;

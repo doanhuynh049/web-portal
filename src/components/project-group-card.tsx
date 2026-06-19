@@ -30,6 +30,7 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  Plus,
 } from "lucide-react";
 import { togglePin, deleteLink, recordOpen } from "@/actions/links";
 import type { Category, Link, Project } from "@/lib/types";
@@ -41,9 +42,10 @@ interface Props {
   links: Link[];
   category: Category | undefined;
   onEdit: (link: Link) => void;
+  onAddLink: (projectId: string) => void;
 }
 
-export function ProjectGroupCard({ project, links, category, onEdit }: Props) {
+export function ProjectGroupCard({ project, links, category, onEdit, onAddLink }: Props) {
   // Sort links by canonical tab order
   const sorted = [...links].sort((a, b) => {
     const ai = PROJECT_TAB_ORDER.indexOf(a.linkType);
@@ -51,7 +53,10 @@ export function ProjectGroupCard({ project, links, category, onEdit }: Props) {
     return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
   });
 
-  const [activeIdx, setActiveIdx] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(() => {
+    const prodIdx = sorted.findIndex((l) => l.linkType === "Production");
+    return prodIdx >= 0 ? prodIdx : 0;
+  });
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -104,7 +109,7 @@ export function ProjectGroupCard({ project, links, category, onEdit }: Props) {
       <div className="px-4 pt-4 pb-3">
         {/* Project title row — show favicon of the first/active link */}
         <div className="flex items-center gap-2.5 mb-2">
-          <SiteFavicon url={active.url} size={24} className="flex-shrink-0" />
+          <SiteFavicon url={active.url} size={24} className="flex-shrink-0" customIconUrl={active.customIconUrl} />
           <span className="text-sm font-semibold flex-1 truncate" style={{ color: "var(--fg)" }}>
             {project.name}
           </span>
@@ -251,6 +256,13 @@ export function ProjectGroupCard({ project, links, category, onEdit }: Props) {
         </button>
         <button onClick={handleDelete} className="btn btn-ghost btn-sm" title="Delete">
           <Trash2 size={12} style={{ color: "#ef4444" }} />
+        </button>
+        <button
+          onClick={() => onAddLink(project.id)}
+          className="btn btn-ghost btn-sm"
+          title="Add new link to this project"
+        >
+          <Plus size={12} style={{ color: "var(--accent)" }} />
         </button>
       </div>
     </article>

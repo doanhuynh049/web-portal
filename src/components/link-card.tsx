@@ -94,7 +94,7 @@ export function LinkCard({ link, category, onEdit }: Props) {
         {/* Title row */}
         <div className="flex items-start gap-2.5">
           {/* Favicon — prominent at 24px */}
-          <SiteFavicon url={link.url} size={24} className="mt-0.5 flex-shrink-0" />
+          <SiteFavicon url={link.url} size={24} className="mt-0.5 flex-shrink-0" customIconUrl={link.customIconUrl} />
           <h3
             className="text-sm font-semibold flex-1 leading-snug"
             style={{ color: "var(--fg)" }}

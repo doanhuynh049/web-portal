@@ -18,6 +18,8 @@ interface Props {
   url: string;
   size?: number;
   className?: string;
+  /** Override auto-fetched favicon with a custom image URL */
+  customIconUrl?: string;
 }
 
 const PALETTE = [
@@ -95,8 +97,29 @@ function Avatar({ url, size }: { url: string; size: number }) {
   );
 }
 
-export function SiteFavicon({ url, size = 20, className }: Props) {
+export function SiteFavicon({ url, size = 20, className, customIconUrl }: Props) {
   const [failed, setFailed] = useState(false);
+  const [customFailed, setCustomFailed] = useState(false);
+
+  // Custom icon takes priority when provided and not yet failed
+  if (customIconUrl && !customFailed) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={customIconUrl}
+        alt=""
+        width={size}
+        height={size}
+        className={className}
+        style={{
+          borderRadius: Math.max(3, Math.round(size * 0.2)),
+          flexShrink: 0,
+          objectFit: "contain",
+        }}
+        onError={() => setCustomFailed(true)}
+      />
+    );
+  }
 
   const local = isLocal(url);
   const src = faviconSrc(url);

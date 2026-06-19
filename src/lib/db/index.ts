@@ -98,6 +98,9 @@ export async function ensureTables(): Promise<void> {
       ALTER TABLE portal_settings ADD COLUMN IF NOT EXISTS profile_avatar_icon TEXT DEFAULT ''
     `;
     await sqlHttp`
+      ALTER TABLE portal_links ADD COLUMN IF NOT EXISTS custom_icon_url TEXT
+    `;
+    await sqlHttp`
       CREATE TABLE IF NOT EXISTS portal_users (
         id            TEXT PRIMARY KEY,
         email         TEXT NOT NULL UNIQUE,

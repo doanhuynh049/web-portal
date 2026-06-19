@@ -21,6 +21,8 @@ interface Props {
   categories: Category[];
   projects: Project[];
   onClose: () => void;
+  /** Pre-fill Project when opening from a ProjectGroupCard's + button */
+  defaultProjectId?: string;
 }
 
 /** Initial blank form state */
@@ -36,15 +38,16 @@ const BLANK = {
   status: "active" as LinkStatus,
   pinned: false,
   projectId: "",
+  customIconUrl: "",
 };
 
-export function LinkDialog({ link, categories, projects, onClose }: Props) {
+export function LinkDialog({ link, categories, projects, onClose, defaultProjectId }: Props) {
   const isEdit = link !== null;
   const [isPending, startTransition] = useTransition();
 
   // ── Form state ─────────────────────────────────────────────────────────────
   const [form, setForm] = useState(() => {
-    if (!isEdit) return BLANK;
+    if (!isEdit) return { ...BLANK, projectId: defaultProjectId ?? "" };
     return {
       title: link.title,
       url: link.url,
@@ -57,6 +60,7 @@ export function LinkDialog({ link, categories, projects, onClose }: Props) {
       status: link.status,
       pinned: link.pinned,
       projectId: link.projectId ?? "",
+      customIconUrl: link.customIconUrl ?? "",
     };
   });
 
@@ -103,6 +107,7 @@ export function LinkDialog({ link, categories, projects, onClose }: Props) {
       status: form.status,
       pinned: form.pinned,
       projectId: form.projectId || undefined,
+      customIconUrl: form.customIconUrl.trim() || undefined,
     };
 
     startTransition(async () => {
@@ -189,16 +194,27 @@ export function LinkDialog({ link, categories, projects, onClose }: Props) {
             </Field>
           </div>
 
-          {/* Purpose */}
-          <Field label="Purpose">
-            <input
-              className="input"
-              type="text"
-              placeholder="What is this link for? (one line)"
-              value={form.purpose}
-              onChange={(e) => set("purpose", e.target.value)}
-            />
-          </Field>
+          {/* Purpose + Custom Icon */}
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Purpose">
+              <input
+                className="input"
+                type="text"
+                placeholder="What is this link for? (one line)"
+                value={form.purpose}
+                onChange={(e) => set("purpose", e.target.value)}
+              />
+            </Field>
+            <Field label="Custom Icon URL">
+              <input
+                className="input"
+                type="url"
+                placeholder="https://example.com/icon.png"
+                value={form.customIconUrl}
+                onChange={(e) => set("customIconUrl", e.target.value)}
+              />
+            </Field>
+          </div>
 
           {/* Usage Guide + Known Issues */}
           <div className="grid grid-cols-2 gap-3">

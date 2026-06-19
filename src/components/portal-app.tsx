@@ -83,6 +83,7 @@ export function PortalApp({ data }: Props) {
   );
   const [showDialog, setShowDialog] = useState(false);
   const [editingLink, setEditingLink] = useState<Link | null>(null);
+  const [addingToProjectId, setAddingToProjectId] = useState<string | undefined>(undefined);
 
   // ── Derived data ───────────────────────────────────────────────────────────
   const catMap = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
@@ -137,7 +138,16 @@ export function PortalApp({ data }: Props) {
 
   // ── Dialog ─────────────────────────────────────────────────────────────────
   const openEdit = (link: Link) => { setEditingLink(link); setShowDialog(true); };
-  const closeDialog = () => { setShowDialog(false); setEditingLink(null); };
+  const openAddToProject = (projectId: string) => {
+    setEditingLink(null);
+    setAddingToProjectId(projectId);
+    setShowDialog(true);
+  };
+  const closeDialog = () => {
+    setShowDialog(false);
+    setEditingLink(null);
+    setAddingToProjectId(undefined);
+  };
 
   const isEmpty = filteredLinks.length === 0;
 
@@ -163,11 +173,12 @@ export function PortalApp({ data }: Props) {
               style={{ color: "var(--fg-subtle)" }}
             />
             <input
-              className="input pl-8"
+              className="input"
               type="search"
               placeholder="Search links, tags, or notes…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              style={{ paddingLeft: "2rem" }}
             />
           </div>
 
@@ -192,7 +203,7 @@ export function PortalApp({ data }: Props) {
             ))}
           </div>
 
-          <button onClick={() => { setEditingLink(null); setShowDialog(true); }} className="btn btn-primary btn-sm">
+          <button onClick={() => { setEditingLink(null); setAddingToProjectId(undefined); setShowDialog(true); }} className="btn btn-primary btn-sm">
             <Plus size={14} />
             Add Link
           </button>
@@ -234,6 +245,7 @@ export function PortalApp({ data }: Props) {
             search={search}
             isEmpty={isEmpty}
             onEdit={openEdit}
+            onAddLink={openAddToProject}
           />
         )}
 
@@ -254,6 +266,7 @@ export function PortalApp({ data }: Props) {
           categories={categories}
           projects={projects}
           onClose={closeDialog}
+          defaultProjectId={addingToProjectId}
         />
       )}
     </div>
@@ -272,6 +285,7 @@ function LinksView({
   search,
   isEmpty,
   onEdit,
+  onAddLink,
 }: {
   pinnedGroups: { project: Project; links: Link[] }[];
   pinnedLinks: Link[];
@@ -282,6 +296,7 @@ function LinksView({
   search: string;
   isEmpty: boolean;
   onEdit: (link: Link) => void;
+  onAddLink: (projectId: string) => void;
 }) {
   if (isEmpty) {
     return (
@@ -312,7 +327,7 @@ function LinksView({
           <SectionHeading label="Pinned" count={pinnedGroups.length + pinnedLinks.length} />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "12px" }}>
             {pinnedGroups.map(({ project, links }) => (
-              <ProjectGroupCard key={project.id} project={project} links={links} category={catMap.get(project.categoryId)} onEdit={onEdit} />
+              <ProjectGroupCard key={project.id} project={project} links={links} category={catMap.get(project.categoryId)} onEdit={onEdit} onAddLink={onAddLink} />
             ))}
             {pinnedLinks.map((link) => (
               <LinkCard key={link.id} link={link} category={catMap.get(link.categoryId)} onEdit={onEdit} />
@@ -327,7 +342,7 @@ function LinksView({
           <SectionHeading label={allLabel} count={regularGroups.length + standaloneLinks.length} />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "12px" }}>
             {regularGroups.map(({ project, links }) => (
-              <ProjectGroupCard key={project.id} project={project} links={links} category={catMap.get(project.categoryId)} onEdit={onEdit} />
+              <ProjectGroupCard key={project.id} project={project} links={links} category={catMap.get(project.categoryId)} onEdit={onEdit} onAddLink={onAddLink} />
             ))}
             {standaloneLinks.map((link) => (
               <LinkCard key={link.id} link={link} category={catMap.get(link.categoryId)} onEdit={onEdit} />
