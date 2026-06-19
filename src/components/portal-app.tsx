@@ -165,46 +165,56 @@ export function PortalApp({ data }: Props) {
 
       <main className="portal-main">
         {/* Top bar */}
-        <div className="flex items-center gap-3 mb-5">
-          <div className="relative flex-1 max-w-md">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="relative flex-1 max-w-lg">
             <Search
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
               style={{ color: "var(--fg-subtle)" }}
             />
             <input
-              className="input"
+              className="search-input"
               type="search"
               placeholder="Search links, tags, or notes…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ paddingLeft: "2rem" }}
             />
+            {!search && (
+              <span
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium px-1.5 py-0.5 rounded"
+                style={{
+                  color: "var(--fg-faint)",
+                  background: "var(--card-hover)",
+                  border: "1px solid var(--border)",
+                  fontSize: "10.5px",
+                  lineHeight: 1.4,
+                  pointerEvents: "none",
+                }}
+              >
+                ⌘K
+              </span>
+            )}
           </div>
 
-          {/* View toggle */}
-          <div
-            className="flex items-center gap-1 rounded-lg p-1"
-            style={{ background: "var(--card)", border: "1px solid var(--border)" }}
-          >
+          {/* Segmented view toggle */}
+          <div className="seg-control">
             {(["links", "projects"] as const).map((mode) => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
-                className="btn btn-sm"
-                style={{
-                  background: viewMode === mode ? "var(--border-strong)" : "transparent",
-                  color: viewMode === mode ? "var(--fg)" : "var(--fg-subtle)",
-                }}
+                className={`seg-btn${viewMode === mode ? " active" : ""}`}
               >
-                {mode === "links" ? <LayoutGrid size={13} /> : <FolderOpen size={13} />}
+                {mode === "links" ? <LayoutGrid size={12} /> : <FolderOpen size={12} />}
                 {mode === "links" ? "Links" : "Projects"}
               </button>
             ))}
           </div>
 
-          <button onClick={() => { setEditingLink(null); setAddingToProjectId(undefined); setShowDialog(true); }} className="btn btn-primary btn-sm">
-            <Plus size={14} />
+          <button
+            onClick={() => { setEditingLink(null); setAddingToProjectId(undefined); setShowDialog(true); }}
+            className="btn btn-primary btn-sm"
+          >
+            <Plus size={13} />
             Add Link
           </button>
         </div>
@@ -219,17 +229,27 @@ export function PortalApp({ data }: Props) {
         {/* Broken links warning */}
         {brokenLinks.length > 0 && !activeCategoryId && !search && (
           <div
-            className="rounded-lg px-4 py-3 mb-5 text-sm"
+            className="flex items-center gap-3 rounded-xl px-4 py-3 mb-5 text-sm"
             style={{
-              background: "rgba(239,68,68,0.08)",
-              border: "1px solid rgba(239,68,68,0.2)",
+              background: "rgba(239,68,68,0.07)",
+              border: "1px solid rgba(239,68,68,0.18)",
               color: "#fca5a5",
             }}
           >
-            <span style={{ fontWeight: 600 }}>
-              {brokenLinks.length} broken link{brokenLinks.length > 1 ? "s" : ""}:
-            </span>{" "}
-            {brokenLinks.map((l) => l.title).join(", ")}
+            <span
+              style={{
+                width: 7, height: 7, borderRadius: "50%",
+                background: "#ef4444", flexShrink: 0,
+                animation: "pulse-dot 1.5s ease-in-out infinite",
+                display: "inline-block",
+              }}
+            />
+            <span>
+              <span style={{ fontWeight: 600 }}>
+                {brokenLinks.length} broken link{brokenLinks.length > 1 ? "s" : ""}:
+              </span>{" "}
+              {brokenLinks.map((l) => l.title).join(", ")}
+            </span>
           </div>
         )}
 
@@ -300,12 +320,21 @@ function LinksView({
 }) {
   if (isEmpty) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center" style={{ color: "var(--fg-subtle)" }}>
-        <Search size={36} className="mb-3 opacity-30" />
-        <p className="text-base font-medium" style={{ color: "var(--fg-muted)" }}>
-          {search ? `No links matching "${search}"` : "No links in this category"}
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div
+          className="flex items-center justify-center rounded-2xl mb-4"
+          style={{
+            width: 56, height: 56,
+            background: "var(--card-hover)",
+            border: "1px solid var(--border)",
+          }}
+        >
+          <Search size={24} style={{ color: "var(--fg-faint)", opacity: 0.6 }} />
+        </div>
+        <p className="text-sm font-semibold mb-1" style={{ color: "var(--fg-muted)" }}>
+          {search ? `No results for "${search}"` : "No links in this category"}
         </p>
-        <p className="text-sm mt-1">
+        <p className="text-xs" style={{ color: "var(--fg-subtle)" }}>
           {search ? "Try a different search term." : "Use + Add Link to get started."}
         </p>
       </div>
@@ -320,12 +349,12 @@ function LinksView({
   const hasRegular = regularGroups.length > 0 || standaloneLinks.length > 0;
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-10">
       {/* ── Pinned section ── */}
       {hasPinned && (
         <section>
           <SectionHeading label="Pinned" count={pinnedGroups.length + pinnedLinks.length} />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "12px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "14px" }}>
             {pinnedGroups.map(({ project, links }) => (
               <ProjectGroupCard key={project.id} project={project} links={links} category={catMap.get(project.categoryId)} onEdit={onEdit} onAddLink={onAddLink} />
             ))}
@@ -340,7 +369,7 @@ function LinksView({
       {hasRegular && (
         <section>
           <SectionHeading label={allLabel} count={regularGroups.length + standaloneLinks.length} />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "12px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "14px" }}>
             {regularGroups.map(({ project, links }) => (
               <ProjectGroupCard key={project.id} project={project} links={links} category={catMap.get(project.categoryId)} onEdit={onEdit} onAddLink={onAddLink} />
             ))}
@@ -403,11 +432,25 @@ function ProjectsView({
 
 function SectionHeading({ label, count }: { label: string; count: number }) {
   return (
-    <div className="flex items-center gap-2 mb-3">
-      <h2 className="text-sm font-semibold" style={{ color: "var(--fg-muted)" }}>{label}</h2>
-      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "var(--card)", color: "var(--fg-subtle)", border: "1px solid var(--border)" }}>
+    <div className="flex items-center gap-2.5 mb-4">
+      <h2
+        className="text-xs font-semibold uppercase tracking-widest"
+        style={{ color: "var(--fg-faint)", letterSpacing: "0.07em" }}
+      >
+        {label}
+      </h2>
+      <span
+        className="text-xs tabular-nums px-1.5 py-0.5 rounded-md font-medium"
+        style={{
+          background: "var(--card-hover)",
+          color: "var(--fg-subtle)",
+          border: "1px solid var(--border)",
+          fontSize: "11px",
+        }}
+      >
         {count}
       </span>
+      <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
     </div>
   );
 }

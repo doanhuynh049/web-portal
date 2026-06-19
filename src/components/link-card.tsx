@@ -46,9 +46,7 @@ export function LinkCard({ link, category, onEdit }: Props) {
 
   function handleOpen() {
     window.open(link.url, "_blank", "noopener,noreferrer");
-    startTransition(() => {
-      recordOpen(link.id);
-    });
+    startTransition(() => { recordOpen(link.id); });
   }
 
   async function handleCopy() {
@@ -57,7 +55,6 @@ export function LinkCard({ link, category, onEdit }: Props) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback for browsers without clipboard API
       const el = document.createElement("textarea");
       el.value = link.url;
       document.body.appendChild(el);
@@ -70,16 +67,12 @@ export function LinkCard({ link, category, onEdit }: Props) {
   }
 
   function handlePin() {
-    startTransition(() => {
-      togglePin(link.id);
-    });
+    startTransition(() => { togglePin(link.id); });
   }
 
   function handleDelete() {
     if (!confirm(`Delete "${link.title}"? This cannot be undone.`)) return;
-    startTransition(() => {
-      deleteLink(link.id);
-    });
+    startTransition(() => { deleteLink(link.id); });
   }
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -87,24 +80,48 @@ export function LinkCard({ link, category, onEdit }: Props) {
   return (
     <article
       className="card flex flex-col"
-      style={{ opacity: isPending ? 0.6 : 1, transition: "opacity 200ms" }}
+      style={{
+        opacity: isPending ? 0.55 : 1,
+        transition: "opacity 200ms ease",
+        borderLeft: category ? `3px solid ${category.color}40` : undefined,
+        animation: "fadeIn 200ms ease",
+      }}
     >
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 flex flex-col gap-2">
+      <div className="px-4 pt-4 pb-3 flex flex-col gap-2.5">
         {/* Title row */}
-        <div className="flex items-start gap-2.5">
-          {/* Favicon — prominent at 24px */}
-          <SiteFavicon url={link.url} size={24} className="mt-0.5 flex-shrink-0" customIconUrl={link.customIconUrl} />
-          <h3
-            className="text-sm font-semibold flex-1 leading-snug"
-            style={{ color: "var(--fg)" }}
+        <div className="flex items-start gap-3">
+          <div
+            className="flex-shrink-0 rounded-lg overflow-hidden mt-0.5"
+            style={{
+              width: 28,
+              height: 28,
+              background: "var(--card-hover)",
+              border: "1px solid var(--border)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            {link.title}
-          </h3>
-          {/* Status */}
+            <SiteFavicon url={link.url} size={18} customIconUrl={link.customIconUrl} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3
+              className="text-sm font-semibold leading-snug"
+              style={{ color: "var(--fg)", letterSpacing: "-0.01em" }}
+            >
+              {link.title}
+            </h3>
+          </div>
+          {/* Status pill */}
           <span
             className="pill flex-shrink-0"
-            style={{ background: status.bgColor, color: status.textColor }}
+            style={{
+              background: status.bgColor,
+              color: status.textColor,
+              fontSize: "10.5px",
+              padding: "2px 7px",
+            }}
           >
             <span
               className="status-dot"
@@ -114,36 +131,40 @@ export function LinkCard({ link, category, onEdit }: Props) {
           </span>
         </div>
 
-        {/* Category + URL row */}
-        <div className="flex items-center gap-2">
-          {category && (
-            <span
-              className="cat-dot flex-shrink-0"
-              style={{ background: category.color }}
-              title={category.name}
-            />
-          )}
-          <a
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-mono truncate flex-1 hover:underline"
-            style={{ color: "var(--accent)", textDecoration: "none" }}
-            title={link.url}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {link.url}
-          </a>
-        </div>
+        {/* URL */}
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="text-xs font-mono truncate block"
+          style={{
+            color: "var(--accent)",
+            textDecoration: "none",
+            opacity: 0.85,
+            transition: "opacity 120ms",
+          }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.85"; }}
+          title={link.url}
+        >
+          {link.url}
+        </a>
 
-        {/* Meta row */}
-        <div className="flex items-center gap-2 flex-wrap">
+        {/* Meta */}
+        <div className="flex items-center gap-1.5 flex-wrap">
           <span className="link-type-pill">{link.linkType}</span>
           {link.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
-              className="text-xs"
-              style={{ color: "var(--fg-faint)" }}
+              className="pill"
+              style={{
+                background: "var(--card-hover)",
+                color: "var(--fg-subtle)",
+                border: "1px solid var(--border)",
+                fontSize: "10.5px",
+                padding: "1px 6px",
+              }}
             >
               #{tag}
             </span>
@@ -152,7 +173,10 @@ export function LinkCard({ link, category, onEdit }: Props) {
 
         {/* Purpose */}
         {link.purpose && (
-          <p className="text-xs leading-relaxed" style={{ color: "var(--fg-muted)" }}>
+          <p
+            className="text-xs leading-relaxed"
+            style={{ color: "var(--fg-subtle)", marginTop: -2 }}
+          >
             {link.purpose}
           </p>
         )}
@@ -162,17 +186,17 @@ export function LinkCard({ link, category, onEdit }: Props) {
       {expanded && (
         <div
           className="px-4 pb-3 flex flex-col gap-3"
-          style={{ borderTop: "1px solid var(--border)" }}
+          style={{
+            borderTop: "1px solid var(--border)",
+            paddingTop: 12,
+            animation: "fadeIn 150ms ease",
+          }}
         >
           {link.usageGuide && (
             <DetailBlock label="Usage Guide" text={link.usageGuide} />
           )}
           {link.knownIssues && (
-            <DetailBlock
-              label="Known Issues"
-              text={link.knownIssues}
-              textColor="#fbbf24"
-            />
+            <DetailBlock label="Known Issues" text={link.knownIssues} textColor="#fbbf24" />
           )}
           {link.lastOpenedAt && (
             <p className="text-xs" style={{ color: "var(--fg-faint)" }}>
@@ -180,7 +204,7 @@ export function LinkCard({ link, category, onEdit }: Props) {
             </p>
           )}
           {link.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1.5">
               {link.tags.map((tag) => (
                 <span
                   key={tag}
@@ -204,48 +228,58 @@ export function LinkCard({ link, category, onEdit }: Props) {
         className="flex items-center gap-1 px-3 py-2.5"
         style={{ borderTop: "1px solid var(--border)", marginTop: "auto" }}
       >
-        {/* Primary: Open */}
         <button onClick={handleOpen} className="btn btn-primary btn-sm">
-          <ExternalLink size={12} />
+          <ExternalLink size={11} />
           Open
         </button>
 
-        {/* Copy */}
         <button onClick={handleCopy} className="btn btn-ghost btn-sm" title="Copy URL">
-          {copied ? <Check size={12} style={{ color: "#22c55e" }} /> : <Copy size={12} />}
+          {copied
+            ? <Check size={11} style={{ color: "#22c55e" }} />
+            : <Copy size={11} />
+          }
         </button>
 
-        {/* Expand / collapse */}
         {hasDetails && (
           <button
             onClick={() => setExpanded((e) => !e)}
             className="btn btn-ghost btn-sm"
             title={expanded ? "Collapse" : "Expand details"}
           >
-            {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            {expanded ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
           </button>
         )}
 
-        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Pin */}
-        <button onClick={handlePin} className="btn btn-ghost btn-sm" title={link.pinned ? "Unpin" : "Pin"}>
-          {link.pinned ? (
-            <PinOff size={12} style={{ color: "var(--accent)" }} />
-          ) : (
-            <Pin size={12} />
-          )}
+        <button
+          onClick={handlePin}
+          className="btn btn-ghost btn-sm"
+          title={link.pinned ? "Unpin" : "Pin"}
+        >
+          {link.pinned
+            ? <PinOff size={11} style={{ color: "var(--accent)" }} />
+            : <Pin size={11} />
+          }
         </button>
 
-        {/* Edit */}
-        <button onClick={() => onEdit(link)} className="btn btn-ghost btn-sm" title="Edit">
-          <Pencil size={12} />
+        <button
+          onClick={() => onEdit(link)}
+          className="btn btn-ghost btn-sm"
+          title="Edit"
+        >
+          <Pencil size={11} />
         </button>
 
-        {/* Delete */}
-        <button onClick={handleDelete} className="btn btn-ghost btn-sm" title="Delete">
-          <Trash2 size={12} style={{ color: "#ef4444" }} />
+        <button
+          onClick={handleDelete}
+          className="btn btn-ghost btn-sm"
+          title="Delete"
+          style={{ color: "var(--fg-faint)" }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#ef4444"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "var(--fg-faint)"; }}
+        >
+          <Trash2 size={11} />
         </button>
       </div>
     </article>
@@ -264,10 +298,15 @@ function DetailBlock({
   textColor?: string;
 }) {
   return (
-    <div className="pt-2">
+    <div>
       <p
         className="text-xs font-semibold mb-1"
-        style={{ color: "var(--fg-faint)", textTransform: "uppercase", letterSpacing: "0.04em" }}
+        style={{
+          color: "var(--fg-faint)",
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          fontSize: "10px",
+        }}
       >
         {label}
       </p>

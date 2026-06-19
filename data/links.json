@@ -7,7 +7,8 @@
       "name": "My Portal",
       "initial": "M",
       "avatarColor": "#3b82f6",
-      "role": "Developer"
+      "role": "Developer",
+      "avatarIcon": "🚀"
     }
   },
   "categories": [
@@ -16,14 +17,14 @@
       "name": "Personal Projects",
       "color": "#3b82f6",
       "description": "Self-built web applications",
-      "order": 2
+      "order": 1
     },
     {
       "id": "cat-services",
       "name": "Backend Services",
       "color": "#8b5cf6",
       "description": "Java Spring Boot, FastAPI and Python services",
-      "order": 1
+      "order": 2
     },
     {
       "id": "cat-hitachi",

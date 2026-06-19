@@ -2,15 +2,14 @@
  * Sidebar — left navigation panel.
  *
  * Sections (top → bottom):
- *  1. Logo / app title
+ *  1. Logo / app title with gradient mark
  *  2. Category list with link counts (click to filter)
- *  3. Summary stats
- *  4. Profile block, theme toggle, settings link  ← bottom-left
+ *  3. Bottom: profile block, theme toggle, settings, sign-out
  */
 "use client";
 
 import Link from "next/link";
-import { Settings, Sun, Moon, Monitor, Check, LogOut } from "lucide-react";
+import { Settings, Sun, Moon, Monitor, LogOut, Globe } from "lucide-react";
 import { signOut } from "next-auth/react";
 import type { Category, Link as LinkType, UserProfile, Theme } from "@/lib/types";
 
@@ -33,73 +32,67 @@ export function Sidebar({
   onToggleTheme,
   profile,
 }: Props) {
-  // Sort categories by order, then name
   const sortedCategories = [...categories].sort(
     (a, b) => a.order - b.order || a.name.localeCompare(b.name)
   );
 
-  // Count links per category
   const countMap = new Map<string, number>();
   for (const link of links) {
     countMap.set(link.categoryId, (countMap.get(link.categoryId) ?? 0) + 1);
   }
 
   const totalLinks = links.length;
-  const brokenCount = links.filter((l) => l.status === "broken").length;
+  const pinnedCount = links.filter((l) => l.pinned).length;
 
   return (
     <aside className="portal-sidebar">
-      {/* ── App logo ── */}
-      <div className="px-4 py-5" style={{ borderBottom: "1px solid var(--border)" }}>
-        <div className="flex items-center gap-2.5">
+      {/* ── Logo ── */}
+      <div
+        className="px-4 pt-5 pb-4"
+        style={{ borderBottom: "1px solid var(--border)" }}
+      >
+        <div className="flex items-center gap-3">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"
-            style={{ background: "var(--accent)" }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{
+              background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%)",
+              boxShadow: "0 2px 10px rgba(79,131,245,0.35)",
+            }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/icon.svg"
-              alt=""
-              width={20}
-              height={20}
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-                const parent = e.currentTarget.parentElement;
-                if (parent) parent.textContent = "W";
-              }}
-              style={{ objectFit: "contain" }}
-            />
+            <Globe size={16} color="#fff" />
           </div>
           <div>
-            <p className="text-sm font-semibold leading-tight" style={{ color: "var(--fg)" }}>
+            <p
+              className="text-sm font-semibold leading-tight"
+              style={{ color: "var(--fg)", letterSpacing: "-0.01em" }}
+            >
               Web Portal
             </p>
-            <p className="text-xs leading-tight" style={{ color: "var(--fg-subtle)" }}>
-              {totalLinks} links
+            <p className="text-xs leading-tight mt-0.5" style={{ color: "var(--fg-subtle)" }}>
+              {totalLinks} links · {pinnedCount} pinned
             </p>
           </div>
         </div>
       </div>
 
-      {/* ── Category list ── */}
-      <nav className="flex-1 px-2 py-3 overflow-y-auto">
-        {/* "All" row */}
+      {/* ── Navigation ── */}
+      <nav className="flex-1 px-3 py-3 overflow-y-auto flex flex-col gap-0.5">
         <CategoryRow
           name="All Links"
-          color="var(--fg-faint)"
           count={totalLinks}
           active={activeCategoryId === null}
           onClick={() => onSelectCategory(null)}
+          color=""
           isDot={false}
         />
 
         {sortedCategories.length > 0 && (
-          <div
-            className="mt-2 mb-1 px-2 text-xs font-semibold uppercase tracking-widest"
+          <p
+            className="px-2 mt-3 mb-1.5 text-xs font-semibold uppercase tracking-widest"
             style={{ color: "var(--fg-faint)" }}
           >
             Categories
-          </div>
+          </p>
         )}
 
         {sortedCategories.map((cat) => (
@@ -116,27 +109,16 @@ export function Sidebar({
         ))}
       </nav>
 
-      {/* ── Summary stats ── */}
+      {/* ── Bottom ── */}
       <div
-        className="px-4 py-3"
-        style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
+        className="px-3 py-3 flex flex-col gap-2"
+        style={{ borderTop: "1px solid var(--border)" }}
       >
-        <div className="flex flex-col gap-1.5">
-          <StatRow label="Categories" value={categories.length} />
-          <StatRow label="Total links" value={totalLinks} />
-          {brokenCount > 0 && (
-            <StatRow label="Broken" value={brokenCount} valueColor="#f87171" />
-          )}
-        </div>
-      </div>
-
-      {/* ── Bottom: profile + theme + settings ── */}
-      <div className="px-3 py-3 flex flex-col gap-2">
-        {/* Profile card */}
+        {/* Profile */}
         <Link
           href="/settings"
-          className="flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors"
-          style={{ textDecoration: "none" }}
+          className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg"
+          style={{ textDecoration: "none", transition: "background 150ms ease" }}
           onMouseEnter={(e) => {
             (e.currentTarget as HTMLElement).style.background = "var(--card-hover)";
           }}
@@ -144,55 +126,54 @@ export function Sidebar({
             (e.currentTarget as HTMLElement).style.background = "transparent";
           }}
         >
-          {/* Avatar */}
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 select-none"
-            style={{ background: profile.avatarIcon ? "transparent" : profile.avatarColor, color: "#fff", fontSize: profile.avatarIcon ? "18px" : undefined }}
+            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 select-none"
+            style={{
+              background: profile.avatarIcon ? "transparent" : profile.avatarColor,
+              color: "#fff",
+              fontSize: profile.avatarIcon ? "16px" : undefined,
+              boxShadow: "0 0 0 2px var(--border-strong)",
+            }}
           >
             {profile.avatarIcon || profile.initial}
           </div>
           <div className="flex-1 min-w-0">
             <p
-              className="text-xs font-medium leading-tight truncate"
+              className="text-xs font-semibold leading-tight truncate"
               style={{ color: "var(--fg)" }}
             >
               {profile.name}
             </p>
-            <p className="text-xs leading-tight truncate" style={{ color: "var(--fg-subtle)" }}>
+            <p className="text-xs leading-tight mt-0.5 truncate" style={{ color: "var(--fg-subtle)" }}>
               {profile.role}
             </p>
           </div>
+          <Settings size={13} style={{ color: "var(--fg-faint)", flexShrink: 0 }} />
         </Link>
 
-        {/* Actions row: theme toggle + settings + sign-out */}
-        <div className="flex items-center gap-1">
-          {/* Theme toggle — cycles dark → light → system */}
+        {/* Actions */}
+        <div className="flex items-center gap-1.5">
           <button
             onClick={onToggleTheme}
             className="btn btn-ghost btn-sm flex-1 justify-center"
             title={
-              theme === "dark" ? "Dark mode (click for Light)" :
-              theme === "light" ? "Light mode (click for System)" :
-              "System mode (click for Dark)"
+              theme === "dark" ? "Dark mode" :
+              theme === "light" ? "Light mode" : "System mode"
             }
+            style={{ gap: 5 }}
           >
-            {theme === "dark" && <><Moon size={13} /> Dark</>}
-            {theme === "light" && <><Sun size={13} /> Light</>}
-            {theme === "system" && <><Monitor size={13} /> System</>}
+            {theme === "dark" && <><Moon size={12} /><span>Dark</span></>}
+            {theme === "light" && <><Sun size={12} /><span>Light</span></>}
+            {theme === "system" && <><Monitor size={12} /><span>System</span></>}
           </button>
 
-          {/* Settings link */}
-          <Link href="/settings" className="btn btn-ghost btn-sm" title="Settings" style={{ textDecoration: "none" }}>
-            <Settings size={13} />
-          </Link>
-
-          {/* Sign out */}
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="btn btn-ghost btn-sm"
             title="Sign out"
+            style={{ padding: "4px 8px" }}
           >
-            <LogOut size={13} />
+            <LogOut size={12} />
           </button>
         </div>
       </div>
@@ -200,7 +181,7 @@ export function Sidebar({
   );
 }
 
-// ── Sub-components ─────────────────────────────────────────────────────────────
+// ── CategoryRow ────────────────────────────────────────────────────────────────
 
 function CategoryRow({
   name,
@@ -220,51 +201,63 @@ function CategoryRow({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-2.5 px-2 py-1.5 rounded-md text-left transition-colors"
+      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left"
       style={{
         background: active ? "var(--accent-bg)" : "transparent",
         color: active ? "var(--accent)" : "var(--fg-muted)",
+        border: active ? "1px solid rgba(79,131,245,0.15)" : "1px solid transparent",
+        transition: "background 120ms ease, color 120ms ease, border-color 120ms ease",
+        cursor: "pointer",
+      }}
+      onMouseEnter={(e) => {
+        if (!active) (e.currentTarget as HTMLElement).style.background = "var(--card-hover)";
+      }}
+      onMouseLeave={(e) => {
+        if (!active) (e.currentTarget as HTMLElement).style.background = "transparent";
       }}
     >
       {isDot ? (
-        <span className="cat-dot flex-shrink-0" style={{ background: color }} />
+        <span
+          className="flex-shrink-0"
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: 2,
+            background: color,
+            boxShadow: active ? `0 0 6px ${color}60` : "none",
+            flexShrink: 0,
+            display: "inline-block",
+          }}
+        />
       ) : (
-        <span className="w-2 h-2 flex-shrink-0" />
+        <span
+          style={{
+            width: 8,
+            height: 8,
+            flexShrink: 0,
+            display: "inline-block",
+            borderRadius: "50%",
+            background: active ? "var(--accent)" : "var(--fg-faint)",
+          }}
+        />
       )}
-      <span className="flex-1 text-xs font-medium truncate">{name}</span>
       <span
-        className="text-xs tabular-nums flex-shrink-0"
-        style={{ color: active ? "var(--accent)" : "var(--fg-faint)" }}
+        className="flex-1 text-xs font-medium truncate"
+        style={{ letterSpacing: "-0.005em" }}
+      >
+        {name}
+      </span>
+      <span
+        className="text-xs tabular-nums flex-shrink-0 px-1.5 py-0.5 rounded-md"
+        style={{
+          color: active ? "var(--accent)" : "var(--fg-faint)",
+          background: active ? "rgba(79,131,245,0.12)" : "transparent",
+          fontSize: "11px",
+          fontWeight: active ? 600 : 400,
+        }}
       >
         {count}
       </span>
-      {active && (
-        <Check size={11} className="flex-shrink-0" style={{ color: "var(--accent)" }} />
-      )}
     </button>
-  );
-}
-
-function StatRow({
-  label,
-  value,
-  valueColor,
-}: {
-  label: string;
-  value: number;
-  valueColor?: string;
-}) {
-  return (
-    <div className="flex justify-between items-center">
-      <span className="text-xs" style={{ color: "var(--fg-subtle)" }}>
-        {label}
-      </span>
-      <span
-        className="text-xs font-semibold tabular-nums"
-        style={{ color: valueColor ?? "var(--fg-muted)" }}
-      >
-        {value}
-      </span>
-    </div>
   );
 }

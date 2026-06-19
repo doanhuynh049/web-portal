@@ -2,7 +2,6 @@
  * /login — Sign in with email + password (NextAuth credentials).
  *
  * Layout: split-screen (left branding panel + right form panel).
- * Inspired by modern financial / SaaS dashboard login pages.
  */
 "use client";
 
@@ -18,127 +17,106 @@ import Link from "next/link";
 // ── Left branding panel ───────────────────────────────────────────────────────
 
 function BrandingPanel() {
+  const features = [
+    { icon: LayoutGrid, title: "Smart Link Organization", desc: "Categorize and pin your most-used links" },
+    { icon: FolderOpen, title: "Project Grouping", desc: "Bundle local, staging, and production URLs together" },
+    { icon: Search, title: "Instant Search", desc: "Find any link by title, tag, or purpose in milliseconds" },
+    { icon: Zap, title: "Powered by Neon + Vercel", desc: "Serverless Postgres with global edge deployment" },
+  ];
+
   return (
     <div
       className="hidden lg:flex flex-col justify-between p-10 relative overflow-hidden"
       style={{
-        background: "linear-gradient(135deg, #0c0c10 0%, #0f172a 50%, #0c1a2e 100%)",
+        background: "linear-gradient(145deg, #07070e 0%, #0c1220 55%, #0a1628 100%)",
         minWidth: 0,
         flex: "0 0 52%",
+        borderRight: "1px solid rgba(255,255,255,0.06)",
       }}
     >
-      {/* Decorative grid */}
+      {/* Grid pattern */}
       <svg
         aria-hidden
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.06 }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.05, pointerEvents: "none" }}
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#60a5fa" strokeWidth="0.5" />
+          <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+            <path d="M 44 0 L 0 0 0 44" fill="none" stroke="#7ba3ff" strokeWidth="0.5" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#grid)" />
       </svg>
 
-      {/* Glowing orb */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: "20%",
-          right: "-10%",
-          width: 380,
-          height: 380,
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          bottom: "10%",
-          left: "-5%",
-          width: 260,
-          height: 260,
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
+      {/* Glow orbs */}
+      <div aria-hidden style={{ position: "absolute", top: "15%", right: "-8%", width: 420, height: 420, borderRadius: "50%", background: "radial-gradient(circle, rgba(79,131,245,0.16) 0%, transparent 70%)", pointerEvents: "none" }} />
+      <div aria-hidden style={{ position: "absolute", bottom: "8%", left: "-8%", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,93,247,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+      <div aria-hidden style={{ position: "absolute", top: "50%", left: "40%", width: 180, height: 180, borderRadius: "50%", background: "radial-gradient(circle, rgba(52,211,153,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-      {/* Top logo */}
+      {/* Logo */}
       <div className="relative z-10 flex items-center gap-3">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ background: "#3b82f6" }}
+          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{
+            background: "linear-gradient(135deg, #4f83f5 0%, #7c5df7 100%)",
+            boxShadow: "0 2px 12px rgba(79,131,245,0.4)",
+          }}
         >
-          <Globe size={22} color="#fff" />
+          <Globe size={18} color="#fff" />
         </div>
-        <span className="text-lg font-bold" style={{ color: "#f4f4f5" }}>
+        <span className="text-base font-bold" style={{ color: "#f0f0f5", letterSpacing: "-0.02em" }}>
           Web Portal
         </span>
       </div>
 
-      {/* Hero text */}
+      {/* Hero */}
       <div className="relative z-10">
         <h1
           className="text-4xl font-bold leading-tight mb-4"
-          style={{ color: "#f4f4f5" }}
+          style={{ color: "#f0f0f5", letterSpacing: "-0.04em" }}
         >
           Your Personal
           <br />
-          <span style={{ color: "#60a5fa" }}>Command Center</span>
+          <span
+            style={{
+              background: "linear-gradient(90deg, #4f83f5 0%, #7c5df7 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Command Center
+          </span>
         </h1>
-        <p className="text-base mb-10" style={{ color: "#94a3b8", maxWidth: 380 }}>
+        <p className="text-sm mb-10 leading-relaxed" style={{ color: "#7070a0", maxWidth: 360 }}>
           Organize all your projects, links, and tools in one beautiful, searchable portal.
         </p>
 
-        {/* Feature list */}
-        <div className="flex flex-col gap-4">
-          {[
-            {
-              icon: <LayoutGrid size={16} />,
-              title: "Smart Link Organization",
-              desc: "Categorize and pin your most-used links",
-            },
-            {
-              icon: <FolderOpen size={16} />,
-              title: "Project Grouping",
-              desc: "Bundle local, staging, and production URLs together",
-            },
-            {
-              icon: <Search size={16} />,
-              title: "Instant Search",
-              desc: "Find any link by title, tag, or purpose in milliseconds",
-            },
-            {
-              icon: <Zap size={16} />,
-              title: "Powered by Neon + Vercel",
-              desc: "Serverless Postgres with global edge deployment",
-            },
-          ].map((f) => (
-            <div key={f.title} className="flex items-start gap-3">
+        <div className="flex flex-col gap-3">
+          {features.map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="flex items-start gap-3">
               <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: "rgba(59,130,246,0.15)", color: "#60a5fa" }}
+                className="flex-shrink-0 rounded-lg flex items-center justify-center mt-0.5"
+                style={{
+                  width: 28, height: 28,
+                  background: "rgba(79,131,245,0.12)",
+                  border: "1px solid rgba(79,131,245,0.20)",
+                }}
               >
-                {f.icon}
+                <Icon size={13} color="#4f83f5" />
               </div>
               <div>
-                <p className="text-sm font-semibold" style={{ color: "#e2e8f0" }}>{f.title}</p>
-                <p className="text-xs" style={{ color: "#64748b" }}>{f.desc}</p>
+                <p className="text-xs font-semibold" style={{ color: "#b0b0cc" }}>{title}</p>
+                <p className="text-xs mt-0.5" style={{ color: "#5a5a7a" }}>{desc}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Bottom quote */}
+      {/* Footer */}
       <div className="relative z-10">
-        <p className="text-xs" style={{ color: "#475569" }}>
+        <p className="text-xs" style={{ color: "#36364a" }}>
           Built for developers who value speed and clarity.
         </p>
       </div>
@@ -187,23 +165,35 @@ function LoginForm() {
   return (
     <div
       className="flex flex-col justify-center px-8 py-12 sm:px-12"
-      style={{ flex: "1 1 0", minWidth: 0, background: "var(--bg)" }}
+      style={{
+        flex: 1,
+        minHeight: "100dvh",
+        background: "var(--bg)",
+      }}
     >
-      <div style={{ maxWidth: 400, width: "100%", margin: "0 auto" }}>
-        {/* Mobile logo (hidden on lg) */}
-        <div className="flex items-center gap-2.5 mb-10 lg:hidden">
+      <div style={{ maxWidth: 380, width: "100%", margin: "0 auto" }}>
+        {/* Mobile logo */}
+        <div className="flex lg:hidden items-center gap-2.5 mb-10">
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center"
-            style={{ background: "#3b82f6" }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center"
+            style={{
+              background: "linear-gradient(135deg, #4f83f5 0%, #7c5df7 100%)",
+              boxShadow: "0 2px 10px rgba(79,131,245,0.35)",
+            }}
           >
-            <Globe size={20} color="#fff" />
+            <Globe size={16} color="#fff" />
           </div>
-          <span className="text-base font-bold" style={{ color: "var(--fg)" }}>Web Portal</span>
+          <span className="text-sm font-bold" style={{ color: "var(--fg)", letterSpacing: "-0.01em" }}>
+            Web Portal
+          </span>
         </div>
 
         {/* Heading */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-1.5" style={{ color: "var(--fg)" }}>
+          <h2
+            className="text-2xl font-bold mb-2"
+            style={{ color: "var(--fg)", letterSpacing: "-0.03em" }}
+          >
             Welcome back
           </h2>
           <p className="text-sm" style={{ color: "var(--fg-subtle)" }}>
@@ -221,18 +211,18 @@ function LoginForm() {
             <div className="relative">
               <Mail
                 size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2"
+                className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 style={{ color: "var(--fg-subtle)" }}
               />
               <input
                 ref={emailRef}
-                className="input"
                 type="email"
+                autoComplete="email"
+                required
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                autoFocus
-                autoComplete="email"
+                className="input"
                 style={{ paddingLeft: "2.25rem" }}
               />
             </div>
@@ -246,24 +236,24 @@ function LoginForm() {
             <div className="relative">
               <Lock
                 size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2"
+                className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
                 style={{ color: "var(--fg-subtle)" }}
               />
               <input
-                className="input"
                 type={showPw ? "text" : "password"}
+                autoComplete="current-password"
+                required
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                autoComplete="current-password"
+                className="input"
                 style={{ paddingLeft: "2.25rem", paddingRight: "2.5rem" }}
               />
               <button
                 type="button"
                 onClick={() => setShowPw((v) => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2"
-                style={{ color: "var(--fg-subtle)", background: "none", border: "none", cursor: "pointer" }}
-                tabIndex={-1}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--fg-subtle)", padding: 0, lineHeight: 1 }}
               >
                 {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
@@ -273,10 +263,15 @@ function LoginForm() {
           {/* Error */}
           {error && (
             <div
-              className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs"
-              style={{ background: "rgba(239,68,68,0.1)", color: "#f87171", border: "1px solid rgba(239,68,68,0.2)" }}
+              className="rounded-lg px-3 py-2.5 text-xs"
+              style={{
+                background: "rgba(239,68,68,0.08)",
+                border: "1px solid rgba(239,68,68,0.18)",
+                color: "#fca5a5",
+                animation: "fadeIn 150ms ease",
+              }}
             >
-              <span className="font-medium">Error:</span> {error}
+              {error}
             </div>
           )}
 
@@ -285,7 +280,14 @@ function LoginForm() {
             type="submit"
             disabled={loading || !email || !password}
             className="btn btn-primary"
-            style={{ justifyContent: "center", marginTop: 2, padding: "10px 16px" }}
+            style={{
+              width: "100%",
+              justifyContent: "center",
+              padding: "10px 16px",
+              fontSize: "14px",
+              borderRadius: "8px",
+              marginTop: 2,
+            }}
           >
             {loading ? (
               <span style={{ opacity: 0.8 }}>Signing in…</span>
@@ -303,7 +305,7 @@ function LoginForm() {
         </div>
 
         {/* Register */}
-        <p className="text-center text-sm" style={{ color: "var(--fg-subtle)" }}>
+        <p className="text-center text-xs" style={{ color: "var(--fg-subtle)" }}>
           Don&apos;t have an account?{" "}
           <Link
             href="/register"
@@ -313,7 +315,7 @@ function LoginForm() {
           </Link>
         </p>
 
-        {/* Footer hint */}
+        {/* Footer */}
         <p className="text-center text-xs mt-8" style={{ color: "var(--fg-faint)" }}>
           Personal portal · Private access only
         </p>
@@ -326,10 +328,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div
-      className="min-h-dvh flex"
-      style={{ background: "var(--bg)" }}
-    >
+    <div className="min-h-dvh flex" style={{ background: "var(--bg)" }}>
       <BrandingPanel />
       <Suspense fallback={null}>
         <LoginForm />
